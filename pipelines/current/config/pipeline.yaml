@@ -1,7 +1,7 @@
 classname: pipelines.current.pipeline.Current
 
 triggers:
-  - .*b5m.*\.nc
+  - .*\.ad2cp
 
 retriever:
   path: pipelines/current/config/retriever.yaml

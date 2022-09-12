@@ -1,9 +1,9 @@
 classname: tsdat.io.retrievers.DefaultRetriever
 readers:
   .*FLT.*:
-    classname: pipelines.waves.readers.MotionFileHandler
+    classname: pipelines.waves.readers.MotionReader
   .*LOC.*:
-    classname: pipelines.waves.readers.GPSFileHandler
+    classname: pipelines.waves.readers.GPSReader
 
 coords:
   time:

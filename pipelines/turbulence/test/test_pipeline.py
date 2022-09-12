@@ -2,17 +2,14 @@ import xarray as xr
 from pathlib import Path
 from tsdat import PipelineConfig, assert_close
 
-# DEVELOPER: Update paths to your configuration(s), test input(s), and expected test
-# results files.
+
 def test_turbulence_pipeline():
     config_path = Path("pipelines/turbulence/config/pipeline.yaml")
     config = PipelineConfig.from_yaml(config_path)
     pipeline = config.instantiate_pipeline()
 
-    test_file = "pipelines/turbulence/test/data/input/adv_data.csv"
-    expected_file = (
-        "pipelines/turbulence/test/data/expected/abc.example.a1.20220424.000000.nc"
-    )
+    test_file = "pipelines/turbulence/test/data/input/vector_example.VEC"
+    expected_file = "pipelines/turbulence/test/data/expected/adv.turbulence-velocity-125ms.a1.20210701.134232.nc"
 
     dataset = pipeline.run([test_file])
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore

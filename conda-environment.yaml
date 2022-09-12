@@ -18,3 +18,4 @@ dependencies:
       - black
       - isort
       - notebook
+      - dolfyn

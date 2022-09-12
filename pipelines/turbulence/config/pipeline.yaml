@@ -1,7 +1,7 @@
 classname: pipelines.turbulence.pipeline.Turbulence
 
 triggers:
-  - .*vector.*\.nc
+  - .*\.VEC
 
 retriever:
   path: pipelines/turbulence/config/retriever.yaml

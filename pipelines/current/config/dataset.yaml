@@ -1,11 +1,11 @@
 attrs:
   title: current
-  description: Example ingest for ADCP data processed using DOLfYN
+  description: Example ingest pipeline to process ADCP data using DOLfYN
   location_id: adcp
   dataset_name: current
   data_level: a1
-  # qualifier:
-  # temporal:
+  qualifier: velocity
+  temporal: 1s
   # institution:
 
 coords:
@@ -63,23 +63,11 @@ coords:
     attrs:
       description: "Earth coordinate axes"
       units: "1"
-  # q:
-  #   dims: [q]
-  #   dtype: str
-  #   attrs:
-  #     description: "Quaternion coordinates"
-  #     units: "1"
-  tke:
-    dims: [tke]
+  q:
+    dims: [q]
     dtype: str
     attrs:
-      description: "Turbulent kinetic energy components"
-      units: "1"
-  tau:
-    dims: [tau]
-    dtype: str
-    attrs:
-      description: "Reynolds stress components"
+      description: "Quaternion coordinates"
       units: "1"
 
 data_vars:
@@ -95,21 +83,18 @@ data_vars:
     attrs:
       description: "Along beam velocity measured by 5th beam"
       units: "m/s"
-  tke_vector:
-    dims: [tke, range, time]
-    dtype: float
+  flow_speed:
+    dims: [range, time]
+    dtype: double
     attrs:
-      description:
-        "Turbulent kinetic energy vector, calculated from the variances of velocity
-        (u,v,w)"
-      units: "m^2/s^2"
-  stress_vector:
-    dims: [tau, range, time]
-    dtype: float
+      description: Horizontal velocity magnitude
+      units: m/s
+  flow_direction:
+    dims: [range, time]
+    dtype: double
     attrs:
-      description:
-        "Stress vector, calculated from the cross-covariances of velocity (u,v,w)"
-      units: "m^2/s^2"
+      description: Horizontal velocity direction, degrees clockwise from true North
+      units: deg
   amplitude:
     dims: [dir, range, time]
     dtype: float
@@ -165,43 +150,43 @@ data_vars:
     dtype: float
     attrs:
       units: "deg"
-  # quaternions:
-  #   dims: [q, time]
-  #   dtype: float
-  #   attrs:
-  #     description: "IMU orientation"
-  #     units: "1"
-  # quaternions_b5:
-  #   dims: [q, time]
-  #   dtype: float
-  #   attrs:
-  #     description: "IMU orientation during 5th beam measurement"
-  #     units: "1"
-  # acceleration:
-  #   dims: [dirIMU, time]
-  #   dtype: float
-  #   attrs:
-  #     units: "m/s^2"
-  # angular_velocity:
-  #   dims: [dirIMU, time]
-  #   dtype: float
-  #   attrs:
-  #     units: "rad/s"
+  quaternions:
+    dims: [q, time]
+    dtype: float
+    attrs:
+      description: "IMU orientation"
+      units: "1"
+  quaternions_b5:
+    dims: [q, time]
+    dtype: float
+    attrs:
+      description: "IMU orientation during 5th beam measurement"
+      units: "1"
+  acceleration:
+    dims: [dirIMU, time]
+    dtype: float
+    attrs:
+      units: "m/s^2"
+  angular_velocity:
+    dims: [dirIMU, time]
+    dtype: float
+    attrs:
+      units: "rad/s"
   magnetic_field:
     dims: [dirIMU, time]
     dtype: float
     attrs:
       units: "uT"
-  # acceleration_b5:
-  #   dims: [dirIMU, time]
-  #   dtype: float
-  #   attrs:
-  #     units: "m/s^2"
-  # angular_velocity_b5:
-  #   dims: [dirIMU, time]
-  #   dtype: float
-  #   attrs:
-  #     units: "rad/s"
+  acceleration_b5:
+    dims: [dirIMU, time]
+    dtype: float
+    attrs:
+      units: "m/s^2"
+  angular_velocity_b5:
+    dims: [dirIMU, time]
+    dtype: float
+    attrs:
+      units: "rad/s"
   magnetic_field_b5:
     dims: [dirIMU, time]
     dtype: float
@@ -245,18 +230,18 @@ data_vars:
     attrs:
       description: "Transmit energy level"
       units: "dB"
-  # ensemble:
-  #   dims: [time]
-  #   dtype: int
-  #   attrs:
-  #     description: "Ping count"
-  #     units: "1"
-  # ensemble_b5:
-  #   dims: [time]
-  #   dtype: int
-  #   attrs:
-  #     description: "5th beam ping count"
-  #     units: "1"
+  ensemble:
+    dims: [time]
+    dtype: int
+    attrs:
+      description: "Ping count"
+      units: "1"
+  ensemble_b5:
+    dims: [time]
+    dtype: int
+    attrs:
+      description: "5th beam ping count"
+      units: "1"
   error:
     dims: [time]
     dtype: int

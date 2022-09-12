@@ -1,11 +1,11 @@
 attrs:
   title: turbulence
-  description: Example ingest for ADV data processed using DOLfYN
+  description: Example ingest pipeline to process ADV data using DOLfYN
   location_id: adv
   dataset_name: turbulence
   data_level: a1
-  # qualifier:
-  # temporal:
+  qualifier: velocity
+  temporal: 125ms
   # institution:
 
 coords:
@@ -58,6 +58,18 @@ data_vars:
     attrs:
       description: "Measured water velocity"
       units: "m/s"
+  flow_speed:
+    dims: [range, time]
+    dtype: double
+    attrs:
+      description: Horizontal velocity magnitude
+      units: m/s
+  flow_direction:
+    dims: [range, time]
+    dtype: double
+    attrs:
+      description: Horizontal velocity direction, degrees clockwise from true North
+      units: deg
   tke_vector:
     dims: [tke, time]
     dtype: float
@@ -73,6 +85,12 @@ data_vars:
       description:
         "Stress vector, calculated from the cross-covariances of velocity (u,v,w)"
       units: "m^2/s^2"
+  turbulent_kinetic_energy:
+    dims: ["time"]
+    dtype: float
+    attrs:
+      description: "Turbulent kinetic energy (sum of the three components)"
+      units: "%"
   turbulence_intensity:
     dims: ["time"]
     dtype: float
@@ -150,8 +168,8 @@ data_vars:
     dtype: bool
     attrs:
       description:
-        "Nortek flags this as the orientation of the communications cables, which is
-        opposite to the ADV head."
+        "Nortek flags this as the orientation of the communications cable, which faces
+        the opposite direction of the ADV's probe."
       units: "1"
   error:
     dims: [time]

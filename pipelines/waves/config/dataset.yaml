@@ -4,8 +4,8 @@ attrs:
   location_id: buoy
   dataset_name: waves
   data_level: b1
-  # qualifier:
-  # temporal:
+  qualifier: wave
+  temporal: 200ms
   # institution:
 
 coords:

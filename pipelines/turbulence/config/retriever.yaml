@@ -1,7 +1,11 @@
 classname: tsdat.io.retrievers.DefaultRetriever
 readers:
   .*:
-    classname: tsdat.io.readers.NetCDFReader
+    classname: pipelines.turbulence.readers.ADVReader
+    parameters:
+      magnetic_declination: 14.79
+      correlation_threshold: 50
+      bin_averaging_window: 300
 
 coords:
   time:
@@ -22,10 +26,16 @@ coords:
 data_vars:
   velocity:
     name: vel
+  flow_speed:
+    name: U_mag
+  flow_direction:
+    name: U_dir
   tke_vector:
     name: tke_vec
   stress_vector:
-    name: stress
+    name: stress_vec
+  turbulent_kinetic_energy:
+    name: TKE
   turbulence_intensity:
     name: TI
   amplitude:

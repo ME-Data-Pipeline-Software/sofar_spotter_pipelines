@@ -12,4 +12,5 @@ typings/
 .pytest_cache/
 htmlcov/
 typings/
+pipelines/ingest_testing
 data/

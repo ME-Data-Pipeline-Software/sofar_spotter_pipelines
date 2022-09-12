@@ -1,7 +1,12 @@
 classname: tsdat.io.retrievers.DefaultRetriever
 readers:
   .*:
-    classname: tsdat.io.readers.NetCDFReader
+    classname: pipelines.current.readers.UpFacingADCPReader
+    parameters:
+      depth_offset: 0.6
+      salinity: 31
+      magnetic_declination: 15.8
+      correlation_threshold: 50
 
 coords:
   time:
@@ -22,22 +27,18 @@ coords:
     name: inst
   earth:
     name: earth
-  # q:
-  #   name: q
-  tke:
-    name: tke
-  tau:
-    name: tau
+  q:
+    name: q
 
 data_vars:
   velocity:
     name: vel
   velocity_b5:
     name: vel_b5
-  tke_vector:
-    name: tke_vec
-  stress_vector:
-    name: stress
+  flow_speed:
+    name: U_mag
+  flow_direction:
+    name: U_dir
   amplitude:
     name: amp
   amplitude_b5:
@@ -56,20 +57,20 @@ data_vars:
     name: pitch
   roll:
     name: roll
-  # quaternions:
-  #   name: quaternions
-  # quaternions_b5:
-  #   name: quaternions_b5
-  # acceleration:
-  #   name: accel
-  # angular_velocity:
-  #   name: angrt
+  quaternions:
+    name: quaternions
+  quaternions_b5:
+    name: quaternions_b5
+  acceleration:
+    name: accel
+  angular_velocity:
+    name: angrt
   magnetic_field:
     name: mag
-  # acceleration_b5:
-  #   name: accel_b5
-  # angular_velocity_b5:
-  #   name: angrt_b5
+  acceleration_b5:
+    name: accel_b5
+  angular_velocity_b5:
+    name: angrt_b5
   magnetic_field_b5:
     name: mag_b5
   orientation_matrix:
@@ -84,10 +85,10 @@ data_vars:
     name: xmit_energy
   transmit_energy_b5:
     name: xmit_energy_b5
-  # ensemble:
-  #   name: ensemble
-  # ensemble_b5:
-  #   name: ensemble_b5
+  ensemble:
+    name: ensemble
+  ensemble_b5:
+    name: ensemble_b5
   error:
     name: error
   error_b5:

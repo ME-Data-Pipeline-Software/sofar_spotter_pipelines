@@ -7,7 +7,7 @@ import warnings
 from tsdat import DataReader
 
 
-class MotionFileHandler(DataReader):
+class MotionReader(DataReader):
     """---------------------------------------------------------------------------------
     Custom DataReader that can be used to read data from a specific format.
 
@@ -54,7 +54,7 @@ class MotionFileHandler(DataReader):
         return ds
 
 
-class GPSFileHandler(DataReader):
+class GPSReader(DataReader):
     """---------------------------------------------------------------------------------
     Custom DataReader that can be used to read data from a specific format.
 

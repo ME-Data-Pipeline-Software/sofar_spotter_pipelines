@@ -2,16 +2,15 @@ import xarray as xr
 from pathlib import Path
 from tsdat import PipelineConfig, assert_close
 
-# DEVELOPER: Update paths to your configuration(s), test input(s), and expected test
-# results files.
+
 def test_waves_pipeline():
     config_path = Path("pipelines/waves/config/pipeline.yaml")
     config = PipelineConfig.from_yaml(config_path)
     pipeline = config.instantiate_pipeline()
 
-    test_file = "pipelines/waves/test/data/input/buoy_data.csv"
+    test_file = "pipelines/waves/test/data/input/0009_FLT.CSV"
     expected_file = (
-        "pipelines/waves/test/data/expected/abc.example.a1.20220424.000000.nc"
+        "pipelines/waves/test/data/expected/buoy.waves.b1.20210819.210649.nc"
     )
 
     dataset = pipeline.run([test_file])
