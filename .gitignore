@@ -13,4 +13,5 @@ typings/
 htmlcov/
 typings/
 pipelines/ingest_testing
-data/
+Aug2021/
+*.index

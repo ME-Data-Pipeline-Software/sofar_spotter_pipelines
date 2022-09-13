@@ -1,0 +1,15 @@
+classname: pipelines.adcp.pipeline.Current
+
+triggers:
+  - .*\.ad2cp
+
+retriever:
+  path: pipelines/adcp/config/retriever.yaml
+
+dataset:
+  path: pipelines/adcp/config/dataset.yaml
+
+quality:
+  path: shared/quality.yaml
+storage:
+  path: shared/storage.yaml

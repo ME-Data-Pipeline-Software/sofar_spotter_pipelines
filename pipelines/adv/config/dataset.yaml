@@ -1,0 +1,150 @@
+attrs:
+  title: Nortek Vector ADV
+  description: Example ingest pipeline to process ADV data using DOLfYN
+  location_id: cook_inlet
+  dataset_name: adv
+  data_level: a1
+  qualifier: velocity
+  temporal: 125ms
+  institution: NREL
+
+coords:
+  time:
+    dims: [time]
+    dtype: datetime64[s]
+    attrs:
+      units: Seconds since 1970-01-01 00:00:00
+  dir:
+    dims: [dir]
+    dtype: str
+    attrs:
+      description: "Coordinate axes given the reference frame (`ds.coord_sys`)"
+      units: "1"
+  beam:
+    dims: [beam]
+    dtype: int
+    attrs:
+      description: "Beam coordinate axes"
+      units: "1"
+  inst:
+    dims: [inst]
+    dtype: str
+    attrs:
+      description: "Instrument coordinate axes"
+      units: "1"
+  earth:
+    dims: [earth]
+    dtype: str
+    attrs:
+      description: "Earth coordinate axes"
+      units: "1"
+
+data_vars:
+  velocity:
+    dims: [dir, time]
+    dtype: float
+    attrs:
+      description: "Measured water velocity"
+      units: "m/s"
+  flow_speed:
+    dims: [range, time]
+    dtype: double
+    attrs:
+      description: Horizontal velocity magnitude
+      units: m/s
+  flow_direction:
+    dims: [range, time]
+    dtype: double
+    attrs:
+      description: Horizontal velocity direction, degrees clockwise from true North
+      units: deg
+  amplitude:
+    dims: [dir, time]
+    dtype: float
+    attrs:
+      description:
+        "Amplitude of acoustic signal backscatter, reference relative to instrument"
+      units: "dB"
+  correlation:
+    dims: [dir, time]
+    dtype: float
+    attrs:
+      description: "Broadband acoustic signal correlation as a measure of similarity"
+      units: "%"
+  heading:
+    dims: [time]
+    dtype: float
+    attrs:
+      units: "deg"
+  pitch:
+    dims: [time]
+    dtype: float
+    attrs:
+      units: "deg"
+  roll:
+    dims: [time]
+    dtype: float
+    attrs:
+      units: "deg"
+  # acceleration:
+  #   dims: [dir, time]
+  #   dtype: float
+  #   attrs:
+  #     units: "m/s^2"
+  # angular_velocity:
+  #   dims: [dir, time]
+  #   dtype: float
+  #   attrs:
+  #     units: "rad/s"
+  earth2inst_orientation:
+    dims: [earth, inst, time]
+    dtype: float
+    attrs:
+      description: "Earth (ENU) to instrument (XYZ) orientation matrix"
+      units: "1"
+  beam2inst_orientation:
+    dims: [beam, inst]
+    dtype: float
+    attrs:
+      description: "Beam [123] to instrument (XYZ) orientation matrix"
+      units: "1"
+  speed_of_sound:
+    dims: [time]
+    dtype: float
+    attrs:
+      description:
+        "Speed of sound in water calculated in instrument as a funtion of user-specified
+        salinity and measured temperature"
+      units: "m/s"
+  pressure:
+    dims: [time]
+    dtype: float
+    attrs:
+      description: "Water pressure at ADCP"
+      units: "dbar"
+  temperature:
+    dims: [time]
+    dtype: float
+    attrs:
+      description: "Water temperature at ADCP"
+      units: "deg C"
+  orientation_down:
+    dims: [time]
+    dtype: int
+    attrs:
+      description:
+        "Nortek flags this as the orientation of the communications cable, which faces
+        the opposite direction of the ADV's probe."
+      units: "1"
+  error:
+    dims: [time]
+    dtype: int
+    attrs:
+      description: "Instrument error code"
+      units: "1"
+  battery_voltage:
+    dims: [time]
+    dtype: float
+    attrs:
+      description: "Battery voltage"
+      units: "V"

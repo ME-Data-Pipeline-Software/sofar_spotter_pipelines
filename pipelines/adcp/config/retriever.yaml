@@ -1,0 +1,109 @@
+classname: tsdat.io.retrievers.DefaultRetriever
+readers:
+  .*:
+    classname: pipelines.adcp.readers.UpFacingADCPReader
+    parameters:
+      depth_offset: 0.6
+      salinity: 31
+      magnetic_declination: 15.8
+      correlation_threshold: 50
+
+coords:
+  time:
+    name: time
+  time_b5:
+    name: time_b5
+  range:
+    name: range
+  range_b5:
+    name: range_b5
+  dir:
+    name: dir
+  dirIMU:
+    name: dirIMU
+  beam:
+    name: beam
+  inst:
+    name: inst
+  inst_nortek:
+    name: x*
+  earth:
+    name: earth
+  q:
+    name: q
+
+data_vars:
+  velocity:
+    name: vel
+  velocity_b5:
+    name: vel_b5
+  flow_speed:
+    name: U_mag
+  flow_direction:
+    name: U_dir
+  amplitude:
+    name: amp
+  amplitude_b5:
+    name: amp_b5
+  correlation:
+    name: corr
+  correlation_b5:
+    name: corr_b5
+  depth:
+    name: depth
+  water_density:
+    name: water_density
+  heading:
+    name: heading
+  pitch:
+    name: pitch
+  roll:
+    name: roll
+  quaternions:
+    name: quaternions
+  quaternions_b5:
+    name: quaternions_b5
+  acceleration:
+    name: accel
+  angular_velocity:
+    name: angrt
+  magnetic_field:
+    name: mag
+  acceleration_b5:
+    name: accel_b5
+  angular_velocity_b5:
+    name: angrt_b5
+  magnetic_field_b5:
+    name: mag_b5
+  earth2inst_orientation:
+    name: orientmat
+  beam2inst_orientation:
+    name: beam2inst_orientmat
+  speed_of_sound:
+    name: c_sound
+  pressure:
+    name: pressure
+  temperature:
+    name: temp
+  transmit_energy:
+    name: xmit_energy
+  transmit_energy_b5:
+    name: xmit_energy_b5
+  ensemble:
+    name: ensemble
+  ensemble_b5:
+    name: ensemble_b5
+  error:
+    name: error
+  error_b5:
+    name: error_b5
+  battery_voltage:
+    name: batt
+  active_configuration:
+    name: active_config
+  low_voltage_skip_flag:
+    name: low_volt_skip
+  boost_running_flag:
+    name: boost_running
+  telemetry_data_flag:
+    name: telemetry_data

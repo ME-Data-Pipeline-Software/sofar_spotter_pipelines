@@ -1,0 +1,15 @@
+classname: pipelines.adv.pipeline.Turbulence
+
+triggers:
+  - .*\.VEC
+
+retriever:
+  path: pipelines/adv/config/retriever.yaml
+
+dataset:
+  path: pipelines/adv/config/dataset.yaml
+
+quality:
+  path: pipelines/adv/config/quality.yaml
+storage:
+  path: shared/storage.yaml
