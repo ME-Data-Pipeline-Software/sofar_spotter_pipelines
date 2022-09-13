@@ -130,7 +130,7 @@ data_vars:
       units: "deg C"
   orientation_down:
     dims: [time]
-    dtype: int
+    dtype: bool
     attrs:
       description:
         "Nortek flags this as the orientation of the communications cable, which faces
