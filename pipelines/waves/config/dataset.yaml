@@ -1,8 +1,8 @@
 attrs:
-  title: waves
+  title: Sofar Spotter Buoy
   description: Example ingest of raw XYZ and GPS data taken by a Sofar Spotter buoy
   location_id: buoy
-  dataset_name: waves
+  dataset_name: spotter
   data_level: b1
   qualifier: wave
   temporal: 200ms
