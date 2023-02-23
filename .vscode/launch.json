@@ -22,14 +22,6 @@
             "program": "${file}",
             "justMyCode": false,
             "console": "integratedTerminal",
-        },
-        {
-            "name": "Runner",
-            "type": "python",
-            "request": "launch",
-            "program": "runner.py",
-            "justMyCode": false,
-            "console": "integratedTerminal"
         }
     ]
 }

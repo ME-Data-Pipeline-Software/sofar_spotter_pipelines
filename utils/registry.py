@@ -8,6 +8,7 @@ logger = logging.getLogger(__name__)
 
 __all__ = ["PipelineRegistry"]
 
+
 class PipelineRegistry:
     """---------------------------------------------------------------------------------
     Registry of Pipelines that can be run on input keys.
@@ -19,7 +20,9 @@ class PipelineRegistry:
         self._cache: Dict[Path, List[Pattern[str]]] = {}
         self._load()
 
-    def dispatch(self, input_keys: List[str], clump: bool = False, multidispatch: bool = False):
+    def dispatch(
+        self, input_keys: List[str], clump: bool = False, multidispatch: bool = False
+    ):
         """-----------------------------------------------------------------------------
         Instantiates and runs the appropriate Pipeline for the provided input files.
         according to the ingest's `mapping` specifications.
@@ -48,10 +51,10 @@ class PipelineRegistry:
 
             if not multidispatch and len(config_files) > 1:
                 raise RuntimeError(
-                        f"More than one match for input key '{input_key}'. Please"
-                        " update the pipeline triggers to remove duplicate matches."
-                        f" Found matches: {config_files}"
-                    )
+                    f"More than one match for input key '{input_key}'. Please"
+                    " update the pipeline triggers to remove duplicate matches."
+                    f" Found matches: {config_files}"
+                )
             elif not len(config_files):
                 logger.warn(
                     "No pipeline configuration found matching input key '%s'", input_key
@@ -70,6 +73,7 @@ class PipelineRegistry:
                     try:
                         pipeline.run(inputs)
                         if clump:
+                            successes += 1
                             break
                     except BaseException:
                         logger.exception(
@@ -80,7 +84,7 @@ class PipelineRegistry:
                         failures += 1
                     else:
                         successes += 1
-        
+
         logger.info(
             "Processing completed with %s successes, %s failures, and %s skipped.",
             successes,
@@ -128,4 +132,3 @@ class PipelineRegistry:
                     matches.append(path)
                     break
         return matches
-        
