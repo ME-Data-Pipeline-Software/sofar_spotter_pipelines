@@ -1,41 +1,43 @@
 classname: tsdat.io.retrievers.DefaultRetriever
 readers:
   .*FLT.*:
-    classname: pipelines.waves.readers.MotionReader
+    classname: tsdat.io.readers.CSVReader
+    parameters:
+      read_csv_kwargs:
+        delimiter: ","
+        index_col: false
   .*LOC.*:
     classname: pipelines.waves.readers.GPSReader
 
 coords:
   time:
     .*:
-      name: time
-      # data_converters:
-      #   - classname: tsdat.io.converters.Timestamp
-      #     timezone: "US/Pacific"
-      #     unit: "s"
-  dir:
-    .*FLT.*: # file pattern containing variable
-      name: dir
+      name: [time, GPS_Epoch_Time(s)]
 
 data_vars:
-  displacement:
+  surge:
     .*FLT.*:
-      name: displacement
+      name: outx(mm)
+      data_converters:
+        - classname: tsdat.io.converters.UnitsConverter
+          input_units: mm
+  sway:
+    .*FLT.*:
+      name: outy(mm)
+      data_converters:
+        - classname: tsdat.io.converters.UnitsConverter
+          input_units: mm
+  heave:
+    .*FLT.*:
+      name: outz(mm)
       data_converters:
         - classname: tsdat.io.converters.UnitsConverter
           input_units: mm
 
-  t_elapsed:
-    .*FLT.*:
-      name: t_elapsed
-      data_converters:
-        - classname: tsdat.io.converters.UnitsConverter
-          input_units: ms
-
-  latitude:
+  lat:
     .*LOC.*:
       name: lat
 
-  longitude:
+  lon:
     .*LOC.*:
       name: lon

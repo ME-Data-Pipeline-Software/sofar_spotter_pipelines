@@ -1,54 +1,71 @@
 attrs:
   title: Sofar Spotter Buoy
-  description: Example ingest of raw XYZ and GPS data taken by a Sofar Spotter buoy
-  location_id: buoy
+  description:
+    Example ingest of raw XYZ and GPS data taken by a Sofar Spotter buoy deployed in
+    Clallam Bay, WA
+  location_id: clallam
   dataset_name: spotter
   data_level: b1
   qualifier: wave
   temporal: 200ms
-  # institution:
+  fs: 2.5 # Hz
+  n_bin: 1500 # 2.5 Hz * 600 s
+  institution: Pacific Northwest National Laboratory
 
 coords:
   time:
     dims: [time]
-    dtype: datetime64[s]
+    dtype: datetime64[ms]
     attrs:
       units: Seconds since 1970-01-01 00:00:00
-  dir:
-    dims: [dir]
-    dtype: str
-    attrs:
-      comment: "Direction of motion"
-      units: "1"
+      long_name: Time
+      standard_name: time
+      timezone: UTC
 
 data_vars:
-  displacement: # Name of variable in the output file
-    dims:
-      [dir, time] # List of coordinates that dimension this variable. `time` is
-      # a very common dimension, sometimes `height`, too.
-    dtype: float # The data type, typically one of: `float`, `long`, `int`
-    attrs:
-      long_name: Buoy Displacement # Label used by Xarray and other libraries for plotting
-      comment: "Translation motion as measured by the buoy" # User-friendly description of the property.
-      units: "m"
-      valid_range: [-3, 3]
-
-  t_elapsed:
+  surge:
     dims: [time]
-    dtype: float
+    dtype: float32
     attrs:
-      long_name: Time Elapsed
-      comment: "Elapsed time since last computer restart"
-      units: "s"
-
-  latitude:
+      long_name: Buoy Surge
+      standard_name: platform_surge
+      units: m
+      valid_min: -3
+      valid_max: 3
+  sway:
     dims: [time]
-    dtype: float
+    dtype: float32
     attrs:
-      units: "deg N"
-
-  longitude:
+      long_name: Buoy Sway
+      standard_name: platform_sway
+      units: m
+      valid_min: -3
+      valid_max: 3
+  heave:
     dims: [time]
-    dtype: float
+    dtype: float32
     attrs:
-      units: "deg E"
+      long_name: Buoy Heave
+      standard_name: platform_heave
+      units: m
+      valid_min: -3
+      valid_max: 3
+
+  lat:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: deg_N
+      long_name: Latitude
+      standard_name: latitude
+      valid_min: -90
+      valid_max: 90
+  lon:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: deg_E
+      long_name: Longitude
+      standard_name: longitude
+      valid_min: -180
+      valid_max: 180

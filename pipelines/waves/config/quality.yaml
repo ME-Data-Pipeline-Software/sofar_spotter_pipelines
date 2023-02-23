@@ -51,8 +51,7 @@ managers:
           bit: 2
           assessment: bad
           meaning: "Spike"
-    apply_to:
-      - displacement
+    apply_to: ["surge", "sway", "heave"]
 
   - name: Flag data below minimum failure threshold
     checker:
@@ -63,8 +62,7 @@ managers:
           bit: 3
           assessment: bad
           meaning: "Value is less than valid_min."
-    apply_to:
-      - displacement
+    apply_to: ["surge", "sway", "heave"]
 
   - name: Flag data above maximum failure threshold
     checker:
@@ -75,5 +73,4 @@ managers:
           bit: 4
           assessment: bad
           meaning: "Value is greater than valid_max."
-    apply_to:
-      - displacement
+    apply_to: ["surge", "sway", "heave"]
