@@ -1,0 +1,15 @@
+classname: pipelines.waves.pipeline.Waves
+
+triggers:
+  - .*FLT.CSV
+
+retriever:
+  path: pipelines/waves/config/retriever.yaml
+
+dataset:
+  path: pipelines/waves/config/dataset_flt.yaml
+
+quality:
+  path: pipelines/waves/config/quality.yaml
+storage:
+  path: shared/storage.yaml

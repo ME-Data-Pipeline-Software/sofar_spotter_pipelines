@@ -11,23 +11,22 @@ readers:
 
 coords:
   time:
-    .*:
-      name: [time, GPS_Epoch_Time(s)]
+    name: GPS_Epoch_Time(s)
 
 data_vars:
-  surge:
+  x:
     .*FLT.*:
       name: outx(mm)
       data_converters:
         - classname: tsdat.io.converters.UnitsConverter
           input_units: mm
-  sway:
+  y:
     .*FLT.*:
       name: outy(mm)
       data_converters:
         - classname: tsdat.io.converters.UnitsConverter
           input_units: mm
-  heave:
+  z:
     .*FLT.*:
       name: outz(mm)
       data_converters:

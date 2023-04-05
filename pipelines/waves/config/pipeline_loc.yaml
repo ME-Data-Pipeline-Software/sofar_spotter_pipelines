@@ -1,13 +1,13 @@
 classname: pipelines.waves.pipeline.Waves
 
 triggers:
-  - .*.CSV
+  - .*LOC.CSV
 
 retriever:
   path: pipelines/waves/config/retriever.yaml
 
 dataset:
-  path: pipelines/waves/config/dataset.yaml
+  path: pipelines/waves/config/dataset_loc.yaml
 
 quality:
   path: pipelines/waves/config/quality.yaml

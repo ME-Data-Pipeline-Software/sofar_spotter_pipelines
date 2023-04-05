@@ -32,17 +32,18 @@ class GPSReader(DataReader):
     def read(self, input_key: str) -> Union[xr.Dataset, Dict[str, xr.Dataset]]:
         # Reads "LOC" filetype from spotter: GPS data
         df = pd.read_csv(input_key, delimiter=",", index_col=False)
+        time = "GPS_Epoch_Time(s)"
         ds = xr.Dataset(
             data_vars={
                 "lat": (
-                    ["time"],
+                    [time],
                     np.array(df["lat(deg)"] + df["lat(min*1e5)"] * 1e-5 / 60),
                 ),
                 "lon": (
-                    ["time"],
+                    [time],
                     np.array(df["long(deg)"] + df["long(min*1e5)"] * 1e-5 / 60),
                 ),
             },
-            coords={"time": ("time", df["GPS_Epoch_Time(s)"])},
+            coords={time: (time, df[time])},
         )
         return ds

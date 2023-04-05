@@ -5,10 +5,9 @@ dataset.yaml definition.
 
 -------------------------------------------------------------------------------------"""
 
-import xarray as xr
-from typing import Any, Optional
+from typing import Any
 
-from pydantic import BaseModel, Extra
+import xarray as xr
 from tsdat import DataConverter, DatasetConfig, RetrievedDataset
 
 
@@ -25,19 +24,6 @@ class CustomDataConverter(DataConverter):
 
     ---------------------------------------------------------------------------------"""
 
-    class Parameters(BaseModel, extra=Extra.forbid):
-        """If your CustomConverter should take any additional arguments from the
-        retriever configuration file, then those should be specified here.
-
-        e.g.,:
-        custom_parameter: float = 5.0
-
-        """
-
-    parameters: Parameters = Parameters()
-    """Extra parameters that can be set via the retrieval configuration file. If you opt
-    to not use any configuration parameters then please remove the code above."""
-
     def convert(
         self,
         data: xr.DataArray,
@@ -45,7 +31,7 @@ class CustomDataConverter(DataConverter):
         dataset_config: DatasetConfig,
         retrieved_dataset: RetrievedDataset,
         **kwargs: Any,
-    ) -> Optional[xr.DataArray]:
+    ) -> xr.DataArray:
         """----------------------------------------------------------------------------
         Applies a custom conversion to the retrieved data.
 
@@ -57,8 +43,7 @@ class CustomDataConverter(DataConverter):
             retrieved_dataset (RetrievedDataset): The retrieved dataset structure.
 
         Returns:
-            Optional[xr.DataArray]: The converted data as an xr.DataArray, or None if
-                the conversion was done in place.
+            xr.DataArray: The converted DataArray.
 
         ----------------------------------------------------------------------------"""
         raise NotImplementedError

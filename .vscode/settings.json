@@ -20,7 +20,7 @@
     "yaml.format.printWidth": 88,
     "yaml.format.proseWrap": "always",
     "python.formatting.provider": "black",
-    "python.linting.enabled": true,
+    "python.linting.enabled": false,
     "python.linting.lintOnSave": true,
     "python.linting.mypyEnabled": true,
     "python.linting.flake8Enabled": false,

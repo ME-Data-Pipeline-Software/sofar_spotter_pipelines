@@ -1,0 +1,14 @@
+classname: pipelines.vap_waves.pipeline.VapWaves
+
+triggers: [.*.nc]
+
+retriever:
+  path: pipelines/vap_waves/config/retriever.yaml
+
+dataset:
+  path: pipelines/vap_waves/config/dataset.yaml
+
+quality:
+  path: pipelines/vap_waves/config/quality.yaml
+storage:
+  path: shared/storage.yaml
