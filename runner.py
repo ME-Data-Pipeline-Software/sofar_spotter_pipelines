@@ -105,4 +105,5 @@ def vap(
 if __name__ == "__main__":
     app()
 
-#python runner.py vap pipelines/vap_waves/config/pipeline.yaml --start 20210819.210000 --end 20210929.200000
+# python runner.py ingest storage/root/raw/*.CSV
+# python runner.py vap pipelines/vap_waves/config/pipeline.yaml --start 20210824.180000 --end 20210929.184500

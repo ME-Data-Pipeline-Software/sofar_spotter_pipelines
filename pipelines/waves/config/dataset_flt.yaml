@@ -7,7 +7,7 @@ attrs:
   dataset_name: spotter
   data_level: a1
   qualifier: wave
-  temporal: 200ms
+  temporal: 400ms
   fs: 2.5 # Hz
   n_bin: 1500 # 2.5 Hz * 600 s
   institution: Pacific Northwest National Laboratory

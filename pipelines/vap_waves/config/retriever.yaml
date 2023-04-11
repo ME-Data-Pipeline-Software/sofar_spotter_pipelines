@@ -11,30 +11,40 @@ parameters:
 
     # Width of the transformation (only matters for bin averaging)
     width:
-      time: 1500
+      time: 1
 
 coords:
   time:
-    name: N/A
-    data_converters:
-      - classname: tsdat.transform.CreateTimeGrid
-        interval: 250ms
+    .*wave.*:
+      name: time
+    # name: N/A
+    # data_converters:
+    #   - classname: tsdat.transform.CreateTimeGrid
+    #     interval: 400ms
 
 data_vars:
   x:
-    .*FLT.*:
+    .*wave.*:
       name: x
+      # data_converters:
+      #   - classname: tsdat.transform.NearestNeighbor
   y:
-    .*FLT.*:
+    .*wave.*:
       name: y
+      # data_converters:
+      #   - classname: tsdat.transform.NearestNeighbor
   z:
-    .*FLT.*:
+    .*wave.*:
       name: z
+      # data_converters:
+      #   - classname: tsdat.transform.NearestNeighbor
   lat:
-    .*LOC.*:
+    .*gps.*:
       name: lat
+      # data_converters:
+      #   - classname: tsdat.transform.Interpolate
   lon:
-    .*LOC.*:
+    .*gps.*:
       name: lon
       # data_converters:
-      #   - classname: tsdat.transform.BinAverage
+      #   - classname: tsdat.transform.Interpolate

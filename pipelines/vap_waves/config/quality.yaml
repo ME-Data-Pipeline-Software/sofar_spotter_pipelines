@@ -1,4 +1,3 @@
-# DEVELOPER: Specify the quality checks and handlers that should be applied
 managers:
   #---------------------------------------------------------------
   - name: Fail if missing coordinates
@@ -55,28 +54,6 @@ managers:
         parameters:
           assessment: bad
           meaning: "Value is greater than the fail_range."
-    apply_to:
-      - DATA_VARS
-
-  - name: Flag data below minimum warning threshold
-    checker:
-      classname: tsdat.qc.checkers.CheckWarnMin
-    handlers:
-      - classname: tsdat.qc.handlers.RecordQualityResults
-        parameters:
-          assessment: indeterminate
-          meaning: "Value is less than the warn_range."
-    apply_to:
-      - DATA_VARS
-
-  - name: Flag data above maximum warning threshold
-    checker:
-      classname: tsdat.qc.checkers.CheckWarnMax
-    handlers:
-      - classname: tsdat.qc.handlers.RecordQualityResults
-        parameters:
-          assessment: indeterminate
-          meaning: "Value is greater than the warn_range."
     apply_to:
       - DATA_VARS
 

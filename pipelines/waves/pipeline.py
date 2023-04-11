@@ -1,5 +1,6 @@
 import xarray as xr
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 from tsdat import IngestPipeline, get_start_date_and_time_str, get_filename
 
@@ -28,12 +29,13 @@ class Waves(IngestPipeline):
 
         date, time = get_start_date_and_time_str(dataset)
 
+        # Set the format of the x-axis tick labels
+        time_format = mdates.DateFormatter("%D %H")
         plt.style.use("default")  # clear any styles that were set before
         plt.style.use("shared/styling.mplstyle")
 
         with self.storage.uploadable_dir(datastream) as tmp_dir:
-
-            if 'waves' in ds.qualifier:
+            if "wave" in ds.qualifier:
                 fig, ax = plt.subplots()
 
                 ax.plot(ds.time, ds["x"], label="surge")
@@ -44,24 +46,21 @@ class Waves(IngestPipeline):
                 ax.legend(ncol=2, bbox_to_anchor=(1, -0.05))
                 ax.set_ylabel("Buoy Displacement [m]")
                 ax.set_xlabel("Time [UTC]")
+                ax.xaxis.set_major_formatter(time_format)
 
-                plot_file = get_filename(
-                    dataset, title="buoy_displacement", extension="png"
-                )
+                plot_file = get_filename(dataset, title="displacement", extension="png")
                 fig.savefig(tmp_dir / plot_file)
                 plt.close(fig)
 
-            elif 'gps' in ds.qualifier:
+            elif "gps" in ds.qualifier:
                 fig, ax = plt.subplots()
 
-                ax.scatter(ds['lon'], ds["lat"])
+                ax.scatter(ds["lon"], ds["lat"])
 
                 ax.set_title("")  # Remove bogus title created by xarray
                 ax.set_ylabel("Latitude [deg N]")
                 ax.set_xlabel("Longitude [deg E]")
 
-                plot_file = get_filename(
-                    dataset, title="location", extension="png"
-                )
+                plot_file = get_filename(dataset, title="location", extension="png")
                 fig.savefig(tmp_dir / plot_file)
                 plt.close(fig)

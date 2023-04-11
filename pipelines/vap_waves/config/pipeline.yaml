@@ -1,6 +1,10 @@
 classname: pipelines.vap_waves.pipeline.VapWaves
+parameters:
+  datastreams:
+    - clallam.spotter-wave-400ms.a1
+    - clallam.spotter-gps-1min.a1
 
-triggers: [.*.nc]
+triggers: []
 
 retriever:
   path: pipelines/vap_waves/config/retriever.yaml

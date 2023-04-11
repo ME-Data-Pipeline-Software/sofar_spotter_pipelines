@@ -25,7 +25,7 @@ data_vars:
     dims: [time]
     dtype: float32
     attrs:
-      units: deg_N
+      units: degrees_N
       long_name: Latitude
       standard_name: latitude
       valid_min: -90
@@ -34,7 +34,7 @@ data_vars:
     dims: [time]
     dtype: float32
     attrs:
-      units: deg_E
+      units: degrees_E
       long_name: Longitude
       standard_name: longitude
       valid_min: -180

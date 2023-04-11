@@ -7,7 +7,6 @@ attrs:
   dataset_name: vap_waves
   data_level: b1
   fs: 2.5 # Hz
-  n_bin: 1500 # 2.5 Hz * 600 s
   institution: Pacific Northwest National Laboratory
 
 coords:
