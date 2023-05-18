@@ -1,10 +1,10 @@
 attrs:
-  title: waves
+  title: Spotter Position and GPS data
   description:
     Example pipeline processing data taken by a Sofar Spotter buoy deployed in Clallam
     Bay, WA
   location_id: clallam
-  dataset_name: vap_waves
+  dataset_name: vap_pos
   data_level: b1
   fs: 2.5 # Hz
   institution: Pacific Northwest National Laboratory
@@ -27,8 +27,8 @@ data_vars:
       long_name: Buoy Surge
       standard_name: platform_surge
       units: m
-      valid_min: -3
-      valid_max: 3
+      valid_min: -1.5
+      valid_max: 1.5
   y:
     dims: [time]
     dtype: float32
@@ -36,8 +36,8 @@ data_vars:
       long_name: Buoy Sway
       standard_name: platform_sway
       units: m
-      valid_min: -3
-      valid_max: 3
+      valid_min: -1.5
+      valid_max: 1.5
   z:
     dims: [time]
     dtype: float32
@@ -45,8 +45,8 @@ data_vars:
       long_name: Buoy Heave
       standard_name: platform_heave
       units: m
-      valid_min: -3
-      valid_max: 3
+      valid_min: -1.5
+      valid_max: 1.5
   lat:
     dims: [time]
     dtype: float32

@@ -1,0 +1,42 @@
+classname: tsdat.io.retrievers.DefaultRetriever
+readers:
+  .*:
+    classname: tsdat.io.readers.NetCDFReader
+
+coords:
+  time:
+    name: time
+  frequency:
+    name: freq
+
+data_vars:
+  wave_hs:
+    name: Hs
+  wave_te:
+    name: Te
+  wave_tp:
+    name: Tp
+  wave_ta:
+    name: Ta
+  wave_tz:
+    name: Tz
+  wave_dp:
+    name: direction
+  wave_spread:
+    name: spread
+  wave_energy_density:
+    name: Szz
+  wave_a1_value:
+    name: a1
+  wave_b1_value:
+    name: b1
+  wave_a2_value:
+    name: a2
+  wave_b2_value:
+    name: b2
+  wave_check_factor:
+    name: k
+  gps_latitude:
+    name: lat
+  gps_longitude:
+    name: lon

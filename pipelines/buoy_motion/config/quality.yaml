@@ -20,7 +20,7 @@ managers:
         parameters:
           context: Coordinate variables must be strictly increasing.
     apply_to:
-      - COORDS
+      - time
 
     #---------------------------------------------------------------
   - name: Remove missing data
@@ -30,6 +30,7 @@ managers:
       - classname: tsdat.qc.handlers.RemoveFailedValues
       - classname: tsdat.qc.handlers.RecordQualityResults
         parameters:
+          bit: 1
           assessment: bad
           meaning: "Value is equal to _FillValue or NaN"
     apply_to:
@@ -37,35 +38,45 @@ managers:
 
   - name: Flag data below minimum failure threshold
     checker:
-      classname: tsdat.qc.checkers.CheckFailMin
+      classname: tsdat.qc.checkers.CheckValidMin
     handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
       - classname: tsdat.qc.handlers.RecordQualityResults
         parameters:
+          bit: 2
           assessment: bad
-          meaning: "Value is less than the fail_range."
+          meaning: "Value is less than valid_min."
     apply_to:
       - DATA_VARS
 
   - name: Flag data above maximum failure threshold
     checker:
-      classname: tsdat.qc.checkers.CheckFailMax
+      classname: tsdat.qc.checkers.CheckValidMax
     handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
       - classname: tsdat.qc.handlers.RecordQualityResults
         parameters:
+          bit: 3
           assessment: bad
-          meaning: "Value is greater than the fail_range."
+          meaning: "Value is greater than valid_max."
     apply_to:
       - DATA_VARS
 
-  # - name: Custom Quality Check and Corrections
-  #   checker:
-  #     classname: pipelines.vap_waves.qc.CustomQualityChecker
-  #     parameters: {}
-  #   handlers:
-  #     - classname: pipelines.vap_waves.qc.CustomQualityHandler
-  #       parameters: {}
-  #   apply_to:
-  #     # keyword for coordinate variables (e.g., 'time')
-  #     - COORDS
-  #     # keyword for all other variables
-  #     - DATA_VARS
+  - name: Despiking Quality Check and Corrections
+    checker:
+      classname: pipelines.buoy_motion.qc.GoringNikora2002
+      parameters:
+        n_points: 1000
+    handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
+      # - classname: pipelines.buoy_motion.qc.CubicSplineInterp
+      #   parameters:
+      #     npt: 12
+      #     method: "cubic"
+      - classname: tsdat.qc.handlers.RecordQualityResults
+        parameters:
+          bit: 4
+          assessment: bad
+          meaning: "Spike"
+    apply_to:
+      - DATA_VARS

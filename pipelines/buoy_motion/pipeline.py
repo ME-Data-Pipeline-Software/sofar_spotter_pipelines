@@ -7,7 +7,7 @@ from tsdat import IngestPipeline, get_start_date_and_time_str, get_filename
 
 class Waves(IngestPipeline):
     """--------------------------------------------------------------------------------
-    SPOTTER_BUOY INGESTION PIPELINE
+    SPOTTER BUOY INGESTION PIPELINE
 
     Wave data taken in Clallam Bay over a month-long deployment in Aug-Sep 2021
 
@@ -35,7 +35,7 @@ class Waves(IngestPipeline):
         plt.style.use("shared/styling.mplstyle")
 
         with self.storage.uploadable_dir(datastream) as tmp_dir:
-            if "wave" in ds.qualifier:
+            if "pos" in ds.qualifier:
                 fig, ax = plt.subplots()
 
                 ax.plot(ds.time, ds["x"], label="surge")

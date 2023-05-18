@@ -7,7 +7,7 @@ readers:
         delimiter: ","
         index_col: false
   .*LOC.*:
-    classname: pipelines.waves.readers.GPSReader
+    classname: pipelines.buoy_motion.readers.GPSReader
 
 coords:
   time:

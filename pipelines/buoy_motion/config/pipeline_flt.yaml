@@ -1,0 +1,15 @@
+classname: pipelines.buoy_motion.pipeline.Waves
+
+triggers:
+  - .*FLT.CSV
+
+retriever:
+  path: pipelines/buoy_motion/config/retriever.yaml
+
+dataset:
+  path: pipelines/buoy_motion/config/dataset_flt.yaml
+
+quality:
+  path: pipelines/buoy_motion/config/quality.yaml
+storage:
+  path: shared/storage.yaml

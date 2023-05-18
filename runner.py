@@ -106,4 +106,5 @@ if __name__ == "__main__":
     app()
 
 # python runner.py ingest storage/root/raw/*.CSV
-# python runner.py vap pipelines/vap_waves/config/pipeline.yaml --start 20210824.180000 --end 20210929.184500
+# python runner.py vap pipelines/vap_buoy_motion/config/pipeline.yaml --start 20210824.183000 --end 20210929.184500
+# python runner.py ingest storage/root/data/clallam.vap_pos.c0/clallam.vap_pos.c0.20210824.180425.nc

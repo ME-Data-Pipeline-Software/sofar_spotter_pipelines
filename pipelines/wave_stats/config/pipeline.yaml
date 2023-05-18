@@ -1,0 +1,15 @@
+classname: pipelines.wave_stats.pipeline.WaveStats
+
+triggers:
+  - .*pos.c0.*\.nc
+
+retriever:
+  path: pipelines/wave_stats/config/retriever.yaml
+
+dataset:
+  path: pipelines/wave_stats/config/dataset.yaml
+
+quality:
+  path: shared/quality.yaml
+storage:
+  path: shared/storage.yaml

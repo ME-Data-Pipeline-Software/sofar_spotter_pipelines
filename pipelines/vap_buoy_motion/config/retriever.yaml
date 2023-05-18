@@ -7,15 +7,15 @@ parameters:
 
     # How far to look for the next available data point
     range:
-      time: 10
+      time: 60
 
-    # Width of the transformation (only matters for bin averaging)
+    # Width of the transformation
     width:
-      time: 1
+      time: 60
 
 coords:
   time:
-    .*wave.*:
+    .*pos.*:
       name: time
     # name: N/A
     # data_converters:
@@ -24,27 +24,22 @@ coords:
 
 data_vars:
   x:
-    .*wave.*:
+    .*pos.*:
       name: x
-      # data_converters:
-      #   - classname: tsdat.transform.NearestNeighbor
   y:
-    .*wave.*:
+    .*pos.*:
       name: y
-      # data_converters:
-      #   - classname: tsdat.transform.NearestNeighbor
   z:
-    .*wave.*:
+    .*pos.*:
       name: z
-      # data_converters:
-      #   - classname: tsdat.transform.NearestNeighbor
+
   lat:
     .*gps.*:
       name: lat
-      # data_converters:
-      #   - classname: tsdat.transform.Interpolate
+      data_converters:
+        - classname: tsdat.transform.NearestNeighbor
   lon:
     .*gps.*:
       name: lon
-      # data_converters:
-      #   - classname: tsdat.transform.Interpolate
+      data_converters:
+        - classname: tsdat.transform.NearestNeighbor
