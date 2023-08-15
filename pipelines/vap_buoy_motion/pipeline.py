@@ -50,9 +50,8 @@ class VapWaves(TransformationPipeline):
 
             fig, ax = plt.subplots()
             ax.scatter(ds["lon"], ds["lat"])
-            ax.set_title("")  # Remove bogus title created by xarray
-            ax.set_ylabel("Latitude [deg N]")
-            ax.set_xlabel("Longitude [deg E]")
+            ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
+            ax.ticklabel_format(axis="both", style="plain", useOffset=False)
             plot_file = get_filename(dataset, title="location", extension="png")
             fig.savefig(tmp_dir / plot_file)
             plt.close(fig)
