@@ -1,13 +1,56 @@
 attrs:
-  title: Spotter Position and GPS data
+  title: Wave Statistics
   description:
-    Example pipeline processing data taken by a Sofar Spotter buoy deployed in Clallam
-    Bay, WA
+    Wave statistics measured by a Sofar Spotter wave buoy deployed in Clallam Bay, WA
+  keywords:
+    OCEAN WAVES, GRAVITY WAVES, WIND WAVES, SIGNIFICANT WAVE HEIGHT, WAVE FREQUENCY,
+    WAVE PERIOD, WAVE SPECTRA,
+
+  conventions: "CD-1.6, ACDD-1.3, IOOS-1.2"
+  featureType: timeseries
+  id: Spotter2
+  infoURL: https://www.osti.gov/biblio/1842840
+  license: Freely Distributed
+  naming_authority: gov.pnnl.sequim
+  standard_name_vocabulary: CF Standard Name Table v79
+  # Attribution
+  creator_country: USA
+  #creator_email:
+  creator_institution: Pacific Northwest National Laboratory (PNNL) - Sequim
+  creator_institution_url: https://www.pnnl.gov/
+  creator_sector: other
+  creator_type: institution
+  creator_url: https://www.pnnl.gov/
+  institution: Pacific Northwest National Laboratory (PNNL)
+  publisher_country: USA
+  #publisher_email:
+  publisher_institution: Pacific Northwest National Laboratory (PNNL) - Sequim
+  publisher_url: https://www.pnnl.gov/
+  #acknowledgement:
+
+  geospatial_lat_min: 48.2735
+  geospatial_lat_max: 48.2742
+  geospatial_lat_units: degrees_north
+  geospatial_lon_min: -124.2870
+  geospatial_lon_max: -124.2852
+  geospatial_lon_units: degrees_east
+  geospatial_vertical_min: 0.0
+  geospatial_vertical_max: 0.0
+  geospatial_vertical_units: meters
+  geospatial_vertical_origin: sea surface
+  geospatial_vertical_positive: up
+  geospatial_vertical_resolution: 1.0
+  time_coverage_start: "2021-08-24T18:30:00Z"
+  time_coverage_end: "2021-09-29T18:45:00Z"
+  source: insitu observations
+  instrument: metaInstrumentation
+  make_model: Sofar Spotter2
+  platform: wave_buoy
+  platform_vocabulary: http://mmisw.org/ont/ioos/platform
+
   location_id: clallam
-  dataset_name: vap_pos
-  data_level: b1
-  fs: 2.5 # Hz
-  institution: Pacific Northwest National Laboratory
+  dataset_name: wave_stats
+  data_level: c1
 
 coords:
   time:
@@ -18,6 +61,14 @@ coords:
       long_name: Time
       standard_name: time
       timezone: UTC
+
+  frequency:
+    dims: [frequency]
+    dtype: float32
+    attrs:
+      long_name: Band Center Frequency
+      units: Hz
+      standard_name: wave_frequency
 
 data_vars:
   x:
@@ -65,3 +116,118 @@ data_vars:
       standard_name: longitude
       valid_min: -180
       valid_max: 180
+
+  wave_hs:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: significant wave height
+      units: m
+      standard_name: sea_surface_wave_significant_height
+      valid_min: 0.0
+      valid_max: 20.0
+  wave_te:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: wave energy period
+      units: s
+      standard_name: sea_surface_wave_mean_period_from_variance_spectral_density_inverse_frequency_moment
+      additional_processing:
+        Calculated from the full-spectrum, buoy-returned energy density values.
+  wave_tp:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: peak wave period
+      units: s
+      standard_name: sea_surface_wave_period_at_variance_spectral_density_maximum
+      valid_min: 0.0
+      valid_max: 40.0
+  wave_ta:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: average wave period
+      units: s
+      standard_name: sea_surface_wave_mean_period_from_variance_spectral_density_first_frequency_moment
+      valid_min: 0.0
+      valid_max: 40.0
+      additional_processing:
+        Calculated from the full-spectrum, buoy-returned energy density values.
+  wave_tz:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: spectral zero-upcross wave period
+      units: s
+      standard_name: sea_surface_wave_zero_upcrossing_period
+      valid_min: 0.0
+      valid_max: 40.0
+
+  wave_dp:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: peak wave direction
+      units: deg_true
+      standard_name: sea_surface_wave_from_direction
+      valid_min: 0.0
+      valid_max: 360.0
+  wave_spread:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: band directional spread
+      units: deg
+      valid_min: 0.0
+      valid_max: 90.0
+  wave_energy_density:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: band energy density
+      units: m^2 s
+      standard_name: sea_surface_wave_variance_spectral_density
+      valid_min: 0.0
+  wave_a1_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: band a1 Fourier coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_b1_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: band b1 Fourier coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_a2_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: band a2 Fourier coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_b2_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: band b2 Fourier coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_check_factor:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: band check factor
+      valid_min: 0.0
+      valid_max: 2.549999952316284
+      comment: Should be less than or equal to unity
+      units: "1"
