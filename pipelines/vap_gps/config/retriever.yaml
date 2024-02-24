@@ -1,0 +1,39 @@
+classname: tsdat.io.retrievers.StorageRetriever
+parameters:
+  fetch_parameters:
+    # How far in time to look after the "end" timestamp (+), before the "begin"
+    # timestamp (-), or both (none) to find filenames that contain needed data
+    file_padding: -24h
+
+  transformation_parameters:
+    # Where the point lies in the coordinate bounds (CENTER, LEFT, RIGHT)
+    alignment:
+      time: LEFT
+
+    # How far to look for the next available data point
+    range:
+      time: 61s
+
+    # Width of the transformation
+    width:
+      time: 600s
+
+
+coords:
+  time:
+    name: N/A
+    data_converters:
+      - classname: tsdat.transform.CreateTimeGrid
+        interval: 10min
+
+data_vars:
+  lat:
+    .*gps.*:
+      name: lat
+      data_converters:
+        - classname: tsdat.transform.BinAverage
+  lon:
+    .*gps.*:
+      name: lon
+      data_converters:
+        - classname: tsdat.transform.BinAverage

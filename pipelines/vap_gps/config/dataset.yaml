@@ -1,0 +1,45 @@
+attrs:
+  title: GPS Location
+  description:
+    Wave statistics measured by a Sofar Spotter wave buoy deployed in Clallam Bay, WA
+  location_id: clallam
+  dataset_name: gps
+  data_level: c0
+
+  geospatial_lat_min: 48.2735
+  geospatial_lat_max: 48.2742
+  geospatial_lat_units: degrees_north
+  geospatial_lon_min: -124.2870
+  geospatial_lon_max: -124.2852
+  geospatial_lon_units: degrees_east
+
+coords:
+  time:
+    dims: [time]
+    dtype: datetime64[ms]
+    attrs:
+      units: Seconds since 1970-01-01 00:00:00 UTC
+      long_name: Time
+      standard_name: time
+      timezone: UTC
+      coverage_content_type: coordinate
+
+data_vars:
+  lat:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: deg_N
+      long_name: Latitude
+      standard_name: latitude
+      valid_min: -90
+      valid_max: 90
+  lon:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: deg_E
+      long_name: Longitude
+      standard_name: longitude
+      valid_min: -180
+      valid_max: 180

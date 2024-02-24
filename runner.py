@@ -125,6 +125,3 @@ def vap(
 
 if __name__ == "__main__":
     app()
-
-# python runner.py ingest storage/root/raw/*.CSV
-# python runner.py vap pipelines/vap_buoy_motion/config/pipeline.yaml --begin 20230727.120000 --end 20231105.120000

@@ -1,0 +1,18 @@
+classname: pipelines.vap_combine.pipeline.VapWaveStats
+parameters:
+  datastreams:
+    - cpr.wave.c0
+    - cpr.gps.c0
+
+triggers: []
+
+retriever:
+  path: pipelines/vap_combine/config/retriever.yaml
+
+dataset:
+  path: pipelines/vap_combine/config/dataset.yaml
+
+quality:
+  path: shared/quality.yaml
+storage:
+  path: shared/storage.yaml

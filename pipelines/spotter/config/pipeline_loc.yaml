@@ -1,0 +1,15 @@
+classname: pipelines.spotter.pipeline.Waves
+
+triggers:
+  - .*LOC.CSV
+
+retriever:
+  path: pipelines/spotter/config/retriever.yaml
+
+dataset:
+  path: pipelines/spotter/config/dataset_loc.yaml
+
+quality:
+  path: pipelines/spotter/config/quality.yaml
+storage:
+  path: shared/storage.yaml

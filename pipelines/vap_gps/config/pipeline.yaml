@@ -1,0 +1,17 @@
+classname: pipelines.vap_gps.pipeline.VapGPS
+parameters:
+  datastreams:
+    - cpr.spotter-gps-1min.a1
+
+triggers: []
+
+retriever:
+  path: pipelines/vap_gps/config/retriever.yaml
+
+dataset:
+  path: pipelines/vap_gps/config/dataset.yaml
+
+quality:
+  path: shared/quality.yaml
+storage:
+  path: shared/storage.yaml
