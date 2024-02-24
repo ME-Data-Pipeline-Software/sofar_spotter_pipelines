@@ -1,8 +1,8 @@
 classname: pipelines.vap_combine.pipeline.VapWaveStats
 parameters:
   datastreams:
-    - cpr.wave.c0
-    - cpr.gps.c0
+    - clallam.wave.c0
+    - clallam.gps.c0
 
 triggers: []
 

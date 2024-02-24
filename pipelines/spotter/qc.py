@@ -3,7 +3,7 @@ from pydantic import BaseModel, Extra
 import xarray as xr
 from numpy.typing import NDArray
 from tsdat import QualityChecker, QualityHandler
-from dolfyn.adv.clean import GN2002, clean_fill
+from mhkit.dolfyn.adv.clean import GN2002, clean_fill
 
 
 class GoringNikora2002(QualityChecker):

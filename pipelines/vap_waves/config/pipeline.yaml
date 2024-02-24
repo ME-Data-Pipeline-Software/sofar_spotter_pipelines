@@ -1,8 +1,7 @@
 classname: pipelines.vap_waves.pipeline.VapWaves
 parameters:
   datastreams:
-    - cpr.spotter-pos-400ms.a1
-    #- cpr.spotter-gps-1min.a1
+    - clallam.spotter-pos-400ms.a1
 
 triggers: []
 

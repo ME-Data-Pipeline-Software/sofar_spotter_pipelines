@@ -1,7 +1,7 @@
 classname: pipelines.vap_gps.pipeline.VapGPS
 parameters:
   datastreams:
-    - cpr.spotter-gps-1min.a1
+    - clallam.spotter-gps-1min.a1
 
 triggers: []
 

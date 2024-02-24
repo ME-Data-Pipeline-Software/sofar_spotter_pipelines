@@ -1,10 +1,10 @@
 from pathlib import Path
-
 import pytest
 import xarray as xr
 from tsdat import assert_close, PipelineConfig, TransformationPipeline
 
 
+@pytest.mark.dependency(depends=["../../example_pipeline/test/test_pipeline.py"])
 def test_vap_waves_pipeline():
     # The transformation pipeline will likely depend on the output of an ingestion
     # pipeline. To account for this we first run the ingest to generate input data for
@@ -27,7 +27,7 @@ def test_vap_waves_pipeline():
     # OR: Delete this and perform sanity checks on the input data instead of comparing
     # with an expected output file
     expected_file = (
-        "pipelines/vap_waves/test/data/expected/bloc.lidar.z01.c0.20240202.180723.nc"
+        "pipelines/vap_waves/test/data/expected/clallam.wave.c0.20210819.211150.nc"
     )
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore
     assert_close(dataset, expected, check_attrs=False)

@@ -1,5 +1,4 @@
 from pathlib import Path
-
 import pytest
 import xarray as xr
 from tsdat import assert_close, PipelineConfig, TransformationPipeline
@@ -17,7 +16,7 @@ def test_vap_combine_pipeline():
     test_vap_waves_pipeline()
     test_vap_gps_pipeline()
 
-    config_path = Path("pipelines/vap_waves/config/pipeline.yaml")
+    config_path = Path("pipelines/vap_combine/config/pipeline.yaml")
     config = PipelineConfig.from_yaml(config_path)
     pipeline: TransformationPipeline = config.instantiate_pipeline()  # type: ignore
 
@@ -30,7 +29,7 @@ def test_vap_combine_pipeline():
     # OR: Delete this and perform sanity checks on the input data instead of comparing
     # with an expected output file
     expected_file = (
-        "pipelines/vap_combine/test/data/expected/bloc.lidar.z01.c0.20240202.180723.nc"
+        "pipelines/vap_combine/test/data/expected/clallam.wave_stats.c1.20210819.000500.nc"
     )
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore
     assert_close(dataset, expected, check_attrs=False)
