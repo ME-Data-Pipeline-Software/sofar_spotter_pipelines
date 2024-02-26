@@ -1,0 +1,18 @@
+classname: pipelines.vap_wave_raw.pipeline.VapWaves
+parameters:
+  datastreams:
+    - clallam.spotter-pos-400ms.a1
+
+triggers: []
+
+retriever:
+  path: pipelines/vap_wave_raw/config/retriever.yaml
+
+dataset:
+  path: pipelines/vap_wave_raw/config/dataset.yaml
+
+quality:
+  path: pipelines/vap_wave_raw/config/quality.yaml
+
+storage:
+  path: shared/storage.yaml

@@ -31,11 +31,11 @@
             "console": "integratedTerminal",
             "args": [
                 "vap",
-                "pipelines/vap_waves/config/pipeline.yaml",
+                "pipelines/vap_wave_raw/config/pipeline.yaml",
                 "--begin",
-                "20230728.000000",
+                "20210828.000000",
                 "--end",
-                "20230729.000000"
+                "20210829.000000"
             ]
         },
     ]

@@ -1,0 +1,73 @@
+managers:
+  #---------------------------------------------------------------
+  - name: Fail if missing coordinates
+    checker:
+      classname: tsdat.qc.checkers.CheckMissing
+    handlers:
+      - classname: tsdat.qc.handlers.FailPipeline
+        parameters:
+          context: Coordinate variables cannot be missing.
+    apply_to:
+      - COORDS
+
+  - name: Fail if monotonic coordinates
+    checker:
+      classname: tsdat.qc.checkers.CheckMonotonic
+      parameters:
+        require_increasing: true
+    handlers:
+      - classname: tsdat.qc.handlers.FailPipeline
+        parameters:
+          context: Coordinate variables must be strictly increasing.
+    apply_to:
+      - time
+
+    #---------------------------------------------------------------
+  - name: Remove missing data
+    checker:
+      classname: tsdat.qc.checkers.CheckMissing
+    handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
+      - classname: tsdat.qc.handlers.RecordQualityResults
+        parameters:
+          assessment: bad
+          meaning: "Value is equal to _FillValue or NaN"
+    apply_to:
+      - DATA_VARS
+
+  - name: Flag data below minimum failure threshold
+    checker:
+      classname: tsdat.qc.checkers.CheckValidMin
+    handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
+      - classname: tsdat.qc.handlers.RecordQualityResults
+        parameters:
+          assessment: bad
+          meaning: "Value is less than valid_min."
+    apply_to:
+      - DATA_VARS
+
+  - name: Flag data above maximum failure threshold
+    checker:
+      classname: tsdat.qc.checkers.CheckValidMax
+    handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
+      - classname: tsdat.qc.handlers.RecordQualityResults
+        parameters:
+          assessment: bad
+          meaning: "Value is greater than valid_max."
+    apply_to:
+      - DATA_VARS
+
+  - name: Check wave factor
+    checker:
+      classname: pipelines.vap_wave_raw.qc.WaveCheckFactor
+    handlers:
+      - classname: tsdat.qc.handlers.RemoveFailedValues
+      - classname: tsdat.qc.handlers.RecordQualityResults
+        parameters:
+          assessment: bad
+          meaning: "Check factor either null or < 1.0"
+    apply_to:
+      - DATA_VARS
+    exclude: [wave_energy_density, wave_check_factor]
