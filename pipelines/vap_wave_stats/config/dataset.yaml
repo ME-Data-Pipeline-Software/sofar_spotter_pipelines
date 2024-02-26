@@ -146,16 +146,16 @@ data_vars:
       long_name: peak wave direction
       units: deg_true
       standard_name: sea_surface_wave_from_direction
-      valid_min: 0.0
-      valid_max: 360.0
+      valid_min: -180
+      valid_max: 180
   wave_spread:
     dims: [time]
     dtype: float32
     attrs:
       long_name: band directional spread
       units: deg
-      valid_min: 0.0
-      valid_max: 90.0
+      valid_min: 0
+      valid_max: 90
   wave_energy_density:
     dims: [time, frequency]
     dtype: float32

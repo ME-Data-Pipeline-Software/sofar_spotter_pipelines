@@ -118,7 +118,7 @@ data_vars:
       long_name: band directional spread
       units: deg
       valid_min: 0
-      valid_max: 180
+      valid_max: 90
   wave_energy_density:
     dims: [time, frequency]
     dtype: float32
