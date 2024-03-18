@@ -98,7 +98,7 @@ class VapWaves(TransformationPipeline):
         a2 = (Sxx - Syy) / (Sxx + Syy)
         b2 = 2 * Cxy.values / (Sxx + Syy)
 
-        theta = np.arctan(b1 / a1)
+        theta = np.arctan2(b1, a1)
         phi = np.sqrt(2 * (1 - np.sqrt(a1**2 + b1**2)))
         theta = np.nan_to_num(theta)  # fill missing data with zeroes
         phi = np.nan_to_num(phi)  # fill missing data with zeroes
@@ -107,9 +107,11 @@ class VapWaves(TransformationPipeline):
         spread = np.arange(psd['time'].size)
         for i in range(0, psd['time'].size):
             # degrees CW from North
-            direction[i] = np.rad2deg(np.trapz(theta[i], psd.freq))
+            direction[i] = 270 - np.rad2deg(np.trapz(theta[i], psd.freq)) % 360
             # degrees
             spread[i] = np.rad2deg(np.trapz(phi[i], psd.freq))
+        # Set direction from 0 to 360
+        direction[direction < 0] = direction[direction < 0] + 360 
 
         # Trim dataset length
         ds = ds.isel(time=slice(None, len(psd["time"])))
