@@ -108,8 +108,8 @@ data_vars:
       long_name: peak wave direction
       units: deg_true
       standard_name: sea_surface_wave_from_direction
-      valid_min: 0
-      valid_max: 360
+      valid_min: -180
+      valid_max: 180
   wave_spread:
     dims: [time]
     dtype: float32
