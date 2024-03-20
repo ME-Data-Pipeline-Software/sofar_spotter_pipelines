@@ -2,7 +2,7 @@ import xarray as xr
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 
-from tsdat import IngestPipeline, get_start_date_and_time_str, get_filename
+from tsdat import IngestPipeline
 
 
 class Waves(IngestPipeline):
@@ -24,10 +24,6 @@ class Waves(IngestPipeline):
 
     def hook_plot_dataset(self, dataset: xr.Dataset):
         ds = dataset
-        location = self.dataset_config.attrs.location_id
-        datastream: str = self.dataset_config.attrs.datastream
-
-        date, time = get_start_date_and_time_str(dataset)
 
         # Set the format of the x-axis tick labels
         time_format = mdates.DateFormatter("%D %H")
@@ -57,6 +53,17 @@ class Waves(IngestPipeline):
             ax.scatter(ds["lon"], ds["lat"])
             ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
             ax.ticklabel_format(axis="both", style="plain", useOffset=False)
+
+            plot_file = self.get_ancillary_filepath(title="location")
+            fig.savefig(plot_file)
+            plt.close(fig)
+
+        elif "sst" in ds.qualifier:
+            fig, ax = plt.subplots()
+
+            ax.plot(ds["time"], ds["sst"])
+            ax.set(ylabel="SST [degC]", xlabel="Time [UTC]")
+            ax.xaxis.set_major_formatter(time_format)
 
             plot_file = self.get_ancillary_filepath(title="location")
             fig.savefig(plot_file)

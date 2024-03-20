@@ -3,6 +3,7 @@ parameters:
   datastreams:
     - clallam.wave.c0
     - clallam.spotter-gps-1min.a1
+    - clallam.spotter-sst-1min.a1
 
 triggers: []
 

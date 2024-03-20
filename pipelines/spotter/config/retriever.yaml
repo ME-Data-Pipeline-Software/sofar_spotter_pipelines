@@ -8,6 +8,8 @@ readers:
         index_col: false
   .*LOC.*:
     classname: pipelines.spotter.readers.GPSReader
+  .*SST.*:
+    classname: pipelines.spotter.readers.SSTReader
 
 coords:
   time:
@@ -32,11 +34,12 @@ data_vars:
       data_converters:
         - classname: tsdat.io.converters.UnitsConverter
           input_units: mm
-
   lat:
     .*LOC.*:
       name: lat
-
   lon:
     .*LOC.*:
       name: lon
+  sst: 
+    .*SST.*: 
+      name: sst 

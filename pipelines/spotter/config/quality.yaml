@@ -39,7 +39,7 @@ managers:
           meaning: "Spike"
     apply_to:
       - DATA_VARS
-    exclude: [lat, lon]
+    exclude: [lat, lon, sst]
 
   - name: Remove missing data
     checker:

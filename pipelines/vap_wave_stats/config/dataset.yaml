@@ -90,7 +90,15 @@ data_vars:
       standard_name: longitude
       valid_min: -180
       valid_max: 180
-
+  sst:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: degC
+      long_name: Sea Surface Temperature
+      standard_name: sea_surface_temperature
+      valid_min: 0
+      valid_max: 40
   wave_hs:
     dims: [time]
     dtype: float32
@@ -98,8 +106,8 @@ data_vars:
       long_name: significant wave height
       units: m
       standard_name: sea_surface_wave_significant_height
-      valid_min: 0.0
-      valid_max: 20.0
+      valid_min: 0
+      valid_max: 20
   wave_te:
     dims: [time]
     dtype: float32
@@ -107,6 +115,8 @@ data_vars:
       long_name: wave energy period
       units: s
       standard_name: sea_surface_wave_mean_period_from_variance_spectral_density_inverse_frequency_moment
+      valid_min: 0
+      valid_max: 22
       additional_processing:
         Calculated from the full-spectrum, buoy-returned energy density values.
   wave_tp:
@@ -116,8 +126,8 @@ data_vars:
       long_name: peak wave period
       units: s
       standard_name: sea_surface_wave_period_at_variance_spectral_density_maximum
-      valid_min: 0.0
-      valid_max: 40.0
+      valid_min: 0
+      valid_max: 22
   wave_ta:
     dims: [time]
     dtype: float32
@@ -125,8 +135,8 @@ data_vars:
       long_name: average wave period
       units: s
       standard_name: sea_surface_wave_mean_period_from_variance_spectral_density_first_frequency_moment
-      valid_min: 0.0
-      valid_max: 40.0
+      valid_min: 0
+      valid_max: 22
       additional_processing:
         Calculated from the full-spectrum, buoy-returned energy density values.
   wave_tz:
@@ -136,8 +146,8 @@ data_vars:
       long_name: spectral zero-upcross wave period
       units: s
       standard_name: sea_surface_wave_zero_upcrossing_period
-      valid_min: 0.0
-      valid_max: 40.0
+      valid_min: 0
+      valid_max: 22
   wave_dp:
     dims: [time]
     dtype: float32

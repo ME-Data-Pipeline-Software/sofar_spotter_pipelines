@@ -20,7 +20,7 @@ class VapWaveStats(TransformationPipeline):
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
         # (Optional) Use this hook to modify the dataset before qc is applied
-        
+
         return dataset
 
     def hook_finalize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
@@ -50,34 +50,32 @@ class VapWaveStats(TransformationPipeline):
         plt.close(fig)
 
         # Wave stats
-        fig, axs = plt.subplots(nrows=3)
-
+        fig, ax = plt.subplots(nrows=4)
         # Plot Wave Heights
         c2 = amp_r(0.50)
-        dataset["wave_hs"].plot(ax=axs[0], c=c2, label=r"H$_{sig}$")
-        axs[0].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-        axs[0].set_ylabel("Wave Height (m)")
+        dataset["wave_hs"].plot(ax=ax[0], c=c2, label=r"H$_{sig}$")
+        ax[0].legend(bbox_to_anchor=(1, -0.10), ncol=3)
+        ax[0].set(ylabel="Wave Height [m]", xlabel="", xticklabels=[], ylim=(0, 4.5))
 
         # Plot Wave Periods
         c1, c2 = dense(0.3), dense(0.6)
-        dataset["wave_ta"].plot(ax=axs[1], c=c1, label=r"T$_{mean}$")
-        dataset["wave_tp"].plot(ax=axs[1], c=c2, label=r"T$_{peak}$")
-        axs[1].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-        axs[1].set_ylabel("Wave Period (s)")
+        dataset["wave_ta"].plot(ax=ax[1], c=c1, label=r"T$_{mean}$")
+        dataset["wave_tp"].plot(ax=ax[1], c=c2, label=r"T$_{peak}$")
+        ax[1].legend(bbox_to_anchor=(1, -0.10), ncol=3)
+        ax[1].set(ylabel="Wave Period [s]", xlabel="", xticklabels=[], ylim=(0, 22))
 
-        # Plot Wave Directions
+        # Plot Wave Direction
         c1 = haline(0.5)
-        dataset["wave_dp"].plot(ax=axs[2], c=c1, label=r"D$_{peak}$")
-        axs[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-        axs[2].set_ylabel("Wave Direction (deg)")
+        dataset["wave_dp"].plot(ax=ax[2], c=c1, label=r"D$_{peak}$")
+        ax[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
+        ax[2].set(
+            ylabel="Wave Direction [deg]", xlabel="", xticklabels=[], ylim=(-180, 180)
+        )
 
-        # c1 = haline(0.9)
-        # ds["sst"].plot(ax=axs[3], c=c1, label=r"Sea Surface$")
-        # axs[3].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-        # axs[3].set_ylabel("Temperature (deg C)")
-
-        for i in range(len(axs)):
-            axs[i].set_xlabel("Time (UTC)")
+        c1 = haline(0.9)
+        dataset["sst"].plot(ax=ax[3], c=c1, label=r"SST$")
+        ax[3].legend(bbox_to_anchor=(1, -0.10), ncol=2)
+        ax[3].set(ylabel="Temperature [deg C]", xlabel="Time (UTC)", ylim=(0, 40))
 
         plot_file = self.get_ancillary_filepath(title="wave_stats")
         fig.savefig(plot_file)

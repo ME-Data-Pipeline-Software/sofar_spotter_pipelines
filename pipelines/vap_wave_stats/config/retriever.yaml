@@ -37,7 +37,11 @@ data_vars:
       name: lon
       data_converters:
         - classname: tsdat.transform.Interpolate
-
+  sst:
+    .*sst.*:
+      name: sst
+      data_converters:
+        - classname: tsdat.transform.Interpolate
   wave_hs:
     .*wave.*: 
       name: wave_hs

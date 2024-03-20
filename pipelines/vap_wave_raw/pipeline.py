@@ -39,7 +39,7 @@ class VapWaves(TransformationPipeline):
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
         # (Optional) Use this hook to modify the dataset before qc is applied
         ds = dataset.copy()
-        
+
         # Fill small gps so we can calculate a wave spectrum
         for key in ["x", "y", "z"]:
             ds[key] = ds[key].interpolate_na(
@@ -66,7 +66,7 @@ class VapWaves(TransformationPipeline):
         )
         # Trim frequency vector to > 0.0455 Hz (wave periods smaller than 22 s)
         slc_freq = slice(0.0455, None)
-        
+
         # Auto-spectra
         psd = fft_tool.power_spectral_density(disp, freq_units="Hz")
         psd = psd.sel(freq=slc_freq)
