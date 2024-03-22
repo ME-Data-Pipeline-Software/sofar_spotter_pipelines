@@ -36,7 +36,7 @@ class VapWaves(TransformationPipeline):
                 # Trim frequency vector to > 0.0455 Hz (wave periods smaller than 22 s)
                 freq = freq[np.where((freq > freq_slc[0]) & (freq <= freq_slc[1]))]
                 input_datasets[key] = input_datasets[key].assign_coords(
-                    {"frequency": freq}
+                    {"frequency": freq.astype("float32")}
                 )
 
                 return input_datasets
@@ -120,12 +120,13 @@ class VapWaves(TransformationPipeline):
             psd["time"], coords={"time": psd["time"]}, attrs=ds["time"].attrs
         )
         ds = ds.assign_coords({"time": time})
+        # Make sure mhkit vars are set to float32
         ds["wave_energy_density"].values = Szz
-        ds["wave_hs"].values = Hs.to_xarray()["Hm0"]
-        ds["wave_te"].values = Te.to_xarray()["Te"]
-        ds["wave_tp"].values = Tp.to_xarray()["Tp"]
-        ds["wave_ta"].values = Ta.to_xarray()["Tm"]
-        ds["wave_tz"].values = Tz.to_xarray()["Tz"]
+        ds["wave_hs"].values = Hs.to_xarray()["Hm0"].astype("float32")
+        ds["wave_te"].values = Te.to_xarray()["Te"].astype("float32")
+        ds["wave_tp"].values = Tp.to_xarray()["Tp"].astype("float32")
+        ds["wave_ta"].values = Ta.to_xarray()["Tm"].astype("float32")
+        ds["wave_tz"].values = Tz.to_xarray()["Tz"].astype("float32")
         ds["wave_check_factor"].values = k
         ds["wave_a1_value"].values = a1
         ds["wave_b1_value"].values = b1

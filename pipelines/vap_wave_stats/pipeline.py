@@ -3,6 +3,7 @@ import xarray as xr
 from typing import Dict
 import matplotlib.pyplot as plt
 from cmocean.cm import amp_r, dense, haline
+from mhkit.tidal import graphics
 
 from tsdat import TransformationPipeline
 
@@ -21,7 +22,7 @@ class VapWaveStats(TransformationPipeline):
         # Need to write in direction coordinate that will be used later
         for key in input_datasets:
             if "wave" in key:
-                directions = np.arange(0, 360, 2.0)
+                directions = np.arange(0, 360, 2.0).astype('float32')
                 input_datasets[key] = input_datasets[key].assign_coords(
                     {"direction": directions}
                 )
@@ -125,6 +126,50 @@ class VapWaveStats(TransformationPipeline):
         plot_file = self.get_ancillary_filepath(title="wave_stats")
         fig.savefig(plot_file)
         plt.close(fig)
+        # Plot wave roses
+        fig, ax = plt.subplots(subplot_kw={"projection":"polar"})
+        ax.set_theta_zero_location("N")
+        ax.set_theta_direction(-1)
+        # Calculate the 2D histogram
+        H, dir_edges, vel_edges = graphics._histogram(dataset['wave_dp'], dataset['wave_hs'], 10, 0.5)
+        # Determine number of bins
+        dir_bins = H.shape[0]
+        h_bins = H.shape[1]
+        # Create the angles
+        thetas = np.arange(0, 2 * np.pi, 2 * np.pi / dir_bins)
+        # Set bar color based on wind speed
+        colors = plt.cm.Wistia(np.linspace(0, 1.0, h_bins))
+        # Set the current speed bin label names
+        # Calculate the 2D histogram
+        labels = [f"{i:.1f}-{j:.1f}" for i, j in zip(vel_edges[:-1], vel_edges[1:])]
+        # Initialize the vertical-offset (polar radius) for the stacked bar chart.
+        r_offset = np.zeros(dir_bins)
+        for h_bin in range(h_bins):
+            # Plot fist set of bars in all directions
+            ax.bar(
+                thetas,
+                H[:, h_bin],
+                width=(2 * np.pi / dir_bins),
+                bottom=r_offset,
+                color=colors[h_bin],
+                label=labels[h_bin],
+            )
+            # Increase the radius offset in all directions
+            r_offset = r_offset + H[:, h_bin]
+        # Add the a legend for current speed bins
+        plt.legend(
+            loc="best", title="Hs [m]", bbox_to_anchor=(1.29, 1.00), ncol=1
+        )
+        # Get the r-ticks (polar y-ticks)
+        yticks = plt.yticks()
+        # Format y-ticks with  units for clarity
+        rticks = [f"{y:.1f}%" for y in yticks[0]]
+        # Set the y-ticks
+        ax.set_yticks(yticks[0], rticks)
+
+        plot_file = self.get_ancillary_filepath(title="wave_rose")
+        fig.savefig(plot_file)
+        plt.close(fig)
 
         # Plot directional spectra
         fig, ax = plt.subplots(subplot_kw=dict(projection="polar"))
@@ -134,9 +179,9 @@ class VapWaveStats(TransformationPipeline):
         a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), spectrum["frequency"])
         color_level_max = np.ceil(np.max(spectrum.values) * 10) / 10
         levels = np.linspace(0, color_level_max, 11)
-        c = ax.contourf(a, f, spectrum, levels=levels)
+        c = ax.contourf(a, f, spectrum, levels=levels, cmap="Blues")
         cbar = plt.colorbar(c)
-        cbar.set_label(f"Spectrum [m^2 s/deg]", rotation=270, labelpad=20)
+        cbar.set_label(f"ESD [m^2 s/deg]", rotation=270, labelpad=20)
         ylabels = ax.get_yticklabels()
         ylabels = [ilabel.get_text() for ilabel in ax.get_yticklabels()]
         ylabels = [ilabel + "Hz" for ilabel in ylabels]
