@@ -1,11 +1,17 @@
 import numpy as np
 import xarray as xr
+import scipy.signal as ss
 from typing import Dict
 import matplotlib.pyplot as plt
 from mhkit import wave, dolfyn
 from cmocean.cm import amp_r, dense, haline
 
 from tsdat import TransformationPipeline
+
+
+fs = 2.5  # Spotter sampling frequency
+wat = 1800  # window averaging time
+freq_slc = [0.0455, 1]  # 22 to 1 s periods
 
 
 class VapWaves(TransformationPipeline):
@@ -23,13 +29,12 @@ class VapWaves(TransformationPipeline):
         for key in input_datasets:
             if "pos" in key:
                 # Create FFT frequency vector
-                fs = 2.5
-                nfft = fs * 600 // 3
+                nfft = fs * wat // 6
                 f = np.fft.fftfreq(int(nfft), 1 / fs)
                 # Use only positive frequencies
                 freq = np.abs(f[1 : int(nfft / 2.0 + 1)])
                 # Trim frequency vector to > 0.0455 Hz (wave periods smaller than 22 s)
-                freq = freq[np.where(freq > 0.0455)]
+                freq = freq[np.where((freq > freq_slc[0]) & (freq <= freq_slc[1]))]
                 input_datasets[key] = input_datasets[key].assign_coords(
                     {"frequency": freq}
                 )
@@ -38,6 +43,7 @@ class VapWaves(TransformationPipeline):
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
         # (Optional) Use this hook to modify the dataset before qc is applied
+
         ds = dataset.copy()
 
         # Fill small gps so we can calculate a wave spectrum
@@ -59,13 +65,12 @@ class VapWaves(TransformationPipeline):
         )
 
         ## Using dolfyn to create spectra
-        fs = 2.5
-        nbin = fs * 600
+        nbin = fs * wat
         fft_tool = dolfyn.adv.api.ADVBinner(
-            n_bin=nbin, fs=fs, n_fft=nbin // 3, n_fft_coh=nbin // 3
+            n_bin=nbin, fs=fs, n_fft=nbin // 6, n_fft_coh=nbin // 6
         )
         # Trim frequency vector to > 0.0455 Hz (wave periods smaller than 22 s)
-        slc_freq = slice(0.0455, None)
+        slc_freq = slice(freq_slc[0], freq_slc[1])
 
         # Auto-spectra
         psd = fft_tool.power_spectral_density(disp, freq_units="Hz")
@@ -89,29 +94,24 @@ class VapWaves(TransformationPipeline):
         Tp = wave.resource.peak_period(pd_Szz)
         Tz = wave.resource.average_zero_crossing_period(pd_Szz)
 
-        # Check factor: generally should be is greater than or equal to 1
+        # Check factor: generally should be greater than or equal to 1
         k = np.sqrt((Sxx + Syy) / Szz)
 
-        ## Wave direction and spread
-        a1 = Cxz.values / np.sqrt((Sxx + Syy) * Szz).values
-        b1 = Cyz.values / np.sqrt((Sxx + Syy) * Szz).values
+        # Calculate peak wave direction and spread
+        a1 = Cxz.values / np.sqrt((Sxx + Syy) * Szz)
+        b1 = Cyz.values / np.sqrt((Sxx + Syy) * Szz)
         a2 = (Sxx - Syy) / (Sxx + Syy)
         b2 = 2 * Cxy.values / (Sxx + Syy)
+        theta = np.rad2deg(np.arctan2(b1, a1))  # degrees CCW from East, "to" convention
+        phi = np.rad2deg(np.sqrt(2 * (1 - np.sqrt(a1**2 + b1**2))))
 
-        theta = np.arctan2(b1, a1)
-        phi = np.sqrt(2 * (1 - np.sqrt(a1**2 + b1**2)))
-        theta = np.nan_to_num(theta)  # fill missing data with zeroes
-        phi = np.nan_to_num(phi)  # fill missing data with zeroes
-
-        direction = np.arange(psd["time"].size)
-        spread = np.arange(psd["time"].size)
-        for i in range(0, psd["time"].size):
-            # degrees CW from North
-            direction[i] = (270 - np.rad2deg(np.trapz(theta[i], psd.freq))) % 360
-            # degrees
-            spread[i] = np.rad2deg(np.trapz(phi[i], psd.freq))
+        # Get peak frequency - fill nan slices with 0
+        peak_idx = psd[2].fillna(0).argmax("freq")
+        # degrees CW from North ("from" convention)
+        direction = (270 - theta[:, peak_idx]) % 360
         # Set direction from -180 to 180
-        direction[direction > 180] = direction[direction > 180] - 360
+        direction[direction > 180] -= 360
+        spread = phi[:, peak_idx]
 
         # Trim dataset length
         ds = ds.isel(time=slice(None, len(psd["time"])))
@@ -158,11 +158,11 @@ class VapWaves(TransformationPipeline):
             label="vertical",
         )
         m = -4
-        x = np.logspace(-1, 0.5)
+        x = np.logspace(-1, 0)
         y = 10 ** (-4) * x**m
         ax.loglog(x, y, "--", c="black", label="f^-4")
         ax.set(
-            ylim=(0.00001, 10),
+            ylim=(0.0001, 10),
             xlabel="Frequency [Hz]",
             ylabel="Energy Density [m^2/Hz]",
         )
@@ -191,11 +191,6 @@ class VapWaves(TransformationPipeline):
         dataset["wave_dp"].plot(ax=axs[2], c=c1, label=r"D$_{peak}$")
         axs[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
         axs[2].set_ylabel("Wave Direction (deg)")
-
-        # c1 = haline(0.9)
-        # ds["sst"].plot(ax=axs[3], c=c1, label=r"Sea Surface$")
-        # axs[3].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-        # axs[3].set_ylabel("Temperature (deg C)")
 
         for i in range(len(axs)):
             axs[i].set_xlabel("Time (UTC)")

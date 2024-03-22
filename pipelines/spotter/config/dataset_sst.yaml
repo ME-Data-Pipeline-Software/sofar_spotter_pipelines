@@ -24,7 +24,7 @@ data_vars:
     dims: [time]
     dtype: float32
     attrs:
-      units: degC
+      units: degree_C
       long_name: Sea Surface Temperature
       standard_name: sea_surface_temperature
       valid_min: 0

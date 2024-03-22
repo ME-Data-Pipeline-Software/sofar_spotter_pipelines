@@ -25,6 +25,9 @@ coords:
   frequency:
     .*wave.*: 
       name: frequency
+  direction:
+    .*wave.*: 
+      name: direction
 
 data_vars:
   lat:
