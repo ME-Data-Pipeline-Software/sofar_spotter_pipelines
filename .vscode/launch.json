@@ -38,5 +38,20 @@
                 "20210829.000000"
             ]
         },
+        {
+            "name": "Debug VAP2",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}//runner.py",
+            "console": "integratedTerminal",
+            "args": [
+                "vap",
+                "pipelines/vap_wave_stats/config/pipeline.yaml",
+                "--begin",
+                "20210901.000000",
+                "--end",
+                "20211001.000000"
+            ]
+        },
     ]
 }

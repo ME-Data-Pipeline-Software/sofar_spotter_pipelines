@@ -126,12 +126,16 @@ class VapWaveStats(TransformationPipeline):
         plot_file = self.get_ancillary_filepath(title="wave_stats")
         fig.savefig(plot_file)
         plt.close(fig)
+
         # Plot wave roses
         fig, ax = plt.subplots(subplot_kw={"projection":"polar"})
         ax.set_theta_zero_location("N")
         ax.set_theta_direction(-1)
+        # Use 360 degrees
+        dp = dataset['wave_dp'].copy(deep=True).values
+        dp[dp < 0] += 360
         # Calculate the 2D histogram
-        H, dir_edges, vel_edges = graphics._histogram(dataset['wave_dp'], dataset['wave_hs'], 10, 0.5)
+        H, dir_edges, vel_edges = graphics._histogram(dp, dataset['wave_hs'], 10, 0.5)
         # Determine number of bins
         dir_bins = H.shape[0]
         h_bins = H.shape[1]
