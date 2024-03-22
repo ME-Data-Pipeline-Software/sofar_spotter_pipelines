@@ -130,13 +130,13 @@ class VapWaveStats(TransformationPipeline):
         fig, ax = plt.subplots(subplot_kw=dict(projection="polar"))
         ax.set_theta_zero_location("N")
         ax.set_theta_direction(-1)
-        spectrum = dataset["wave_dir_energy_density"].mean("time")
-        a, f = np.meshgrid(np.deg2rad(dataset["direction"]), dataset["frequency"])
-        color_level_max = np.ceil(np.max(spectrum.data) * 10) / 10
+        spectrum = dataset["wave_dir_energy_density"].mean("time").sel(frequency=slice(None,0.5))
+        a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), spectrum["frequency"])
+        color_level_max = np.ceil(np.max(spectrum.values) * 10) / 10
         levels = np.linspace(0, color_level_max, 11)
         c = ax.contourf(a, f, spectrum, levels=levels)
         cbar = plt.colorbar(c)
-        cbar.set_label("Spectrum [m^2 s/deg]", rotation=270, labelpad=20)
+        cbar.set_label(f"Spectrum [m^2 s/deg]", rotation=270, labelpad=20)
         ylabels = ax.get_yticklabels()
         ylabels = [ilabel.get_text() for ilabel in ax.get_yticklabels()]
         ylabels = [ilabel + "Hz" for ilabel in ylabels]
