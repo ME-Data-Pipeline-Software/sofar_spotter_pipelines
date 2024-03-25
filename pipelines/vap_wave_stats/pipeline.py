@@ -133,7 +133,7 @@ class VapWaveStats(TransformationPipeline):
         ax.set_theta_direction(-1)
         # Use 360 degrees
         dp = dataset['wave_dp'].copy(deep=True).values
-        dp[dp < 0] += 360
+        dp = dp % 360
         # Calculate the 2D histogram
         H, dir_edges, vel_edges = graphics._histogram(dp, dataset['wave_hs'], 10, 0.5)
         # Determine number of bins

@@ -161,7 +161,7 @@ data_vars:
     attrs:
       long_name: Peak Wave Direction
       units: degree
-      standard_name: sea_surface_wave_from_direction
+      standard_name: sea_surface_primary_swell_wave_from_direction
       valid_min: -180
       valid_max: 180
   wave_spread:
@@ -169,6 +169,7 @@ data_vars:
     dtype: float32
     attrs:
       long_name: Peak Wave Spread
+      standard_name: sea_surface_primary_swell_wave_directional_spread
       units: degree
       valid_min: 0
       valid_max: 180
