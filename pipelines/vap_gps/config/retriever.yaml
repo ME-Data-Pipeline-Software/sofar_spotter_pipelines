@@ -8,7 +8,7 @@ parameters:
   transformation_parameters:
     # Where the point lies in the coordinate bounds (CENTER, LEFT, RIGHT)
     alignment:
-      time: LEFT
+      time: CENTER
 
     # How far to look for the next available data point
     range:

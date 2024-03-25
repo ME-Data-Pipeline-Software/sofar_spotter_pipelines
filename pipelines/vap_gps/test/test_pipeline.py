@@ -27,7 +27,7 @@ def test_vap_gps_pipeline():
     # OR: Delete this and perform sanity checks on the input data instead of comparing
     # with an expected output file
     expected_file = (
-        "pipelines/vap_gps/test/data/expected/clallam.gps.c0.20210903.000500.nc"
+        "pipelines/vap_gps/test/data/expected/clallam.gps.b1.20210903.000000.nc"
     )
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore
     assert_close(dataset, expected, check_attrs=False)

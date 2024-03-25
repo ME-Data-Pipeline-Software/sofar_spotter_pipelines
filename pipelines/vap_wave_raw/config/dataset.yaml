@@ -15,7 +15,6 @@ coords:
       long_name: Time
       standard_name: time
       timezone: UTC
-      coverage_content_type: coordinate
   frequency:
     dims: [frequency]
     dtype: float32
@@ -23,7 +22,6 @@ coords:
       long_name: Band Center Frequency
       units: Hz
       standard_name: wave_frequency
-      coverage_content_type: coordinate
 
 data_vars:
   x:

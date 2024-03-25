@@ -145,57 +145,54 @@ class VapWaves(TransformationPipeline):
     def hook_plot_dataset(self, dataset: xr.Dataset):
         # (Optional, recommended) Create plots.
 
-        # Set the format of the x-axis tick labels
-        plt.style.use("default")  # clear any styles that were set before
-        plt.style.use("shared/styling.mplstyle")
+        with plt.style.context("shared/styling.mplstyle"):
+            # Plot wave spectra
+            t = dolfyn.time.dt642date(dataset.time)
 
-        # Plot wave spectra
-        t = dolfyn.time.dt642date(dataset.time)
+            fig, ax = plt.subplots(figsize=(6, 6))
+            ax.loglog(
+                dataset["frequency"],
+                dataset["wave_energy_density"].mean("time"),
+                label="vertical",
+            )
+            m = -4
+            x = np.logspace(-1, 0)
+            y = 10 ** (-4) * x**m
+            ax.loglog(x, y, "--", c="black", label="f^-4")
+            ax.set(
+                ylim=(0.0001, 10),
+                xlabel="Frequency [Hz]",
+                ylabel="Energy Density [m^2/Hz]",
+            )
+            plot_file = self.get_ancillary_filepath(title="elevation_spectrum")
+            fig.savefig(plot_file)
+            plt.close(fig)
 
-        fig, ax = plt.subplots(figsize=(6, 6))
-        ax.loglog(
-            dataset["frequency"],
-            dataset["wave_energy_density"].mean("time"),
-            label="vertical",
-        )
-        m = -4
-        x = np.logspace(-1, 0)
-        y = 10 ** (-4) * x**m
-        ax.loglog(x, y, "--", c="black", label="f^-4")
-        ax.set(
-            ylim=(0.0001, 10),
-            xlabel="Frequency [Hz]",
-            ylabel="Energy Density [m^2/Hz]",
-        )
-        plot_file = self.get_ancillary_filepath(title="elevation_spectrum")
-        fig.savefig(plot_file)
-        plt.close(fig)
+            # Wave stats
+            fig, axs = plt.subplots(nrows=3)
 
-        # Wave stats
-        fig, axs = plt.subplots(nrows=3)
+            # Plot Wave Heights
+            c2 = amp_r(0.50)
+            dataset["wave_hs"].plot(ax=axs[0], c=c2, label=r"H$_{sig}$")
+            axs[0].legend(bbox_to_anchor=(1, -0.10), ncol=3)
+            axs[0].set_ylabel("Wave Height (m)")
 
-        # Plot Wave Heights
-        c2 = amp_r(0.50)
-        dataset["wave_hs"].plot(ax=axs[0], c=c2, label=r"H$_{sig}$")
-        axs[0].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-        axs[0].set_ylabel("Wave Height (m)")
+            # Plot Wave Periods
+            c1, c2 = dense(0.3), dense(0.6)
+            dataset["wave_ta"].plot(ax=axs[1], c=c1, label=r"T$_{mean}$")
+            dataset["wave_tp"].plot(ax=axs[1], c=c2, label=r"T$_{peak}$")
+            axs[1].legend(bbox_to_anchor=(1, -0.10), ncol=3)
+            axs[1].set_ylabel("Wave Period (s)")
 
-        # Plot Wave Periods
-        c1, c2 = dense(0.3), dense(0.6)
-        dataset["wave_ta"].plot(ax=axs[1], c=c1, label=r"T$_{mean}$")
-        dataset["wave_tp"].plot(ax=axs[1], c=c2, label=r"T$_{peak}$")
-        axs[1].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-        axs[1].set_ylabel("Wave Period (s)")
+            # Plot Wave Directions
+            c1 = haline(0.5)
+            dataset["wave_dp"].plot(ax=axs[2], c=c1, label=r"D$_{peak}$")
+            axs[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
+            axs[2].set_ylabel("Wave Direction (deg)")
 
-        # Plot Wave Directions
-        c1 = haline(0.5)
-        dataset["wave_dp"].plot(ax=axs[2], c=c1, label=r"D$_{peak}$")
-        axs[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-        axs[2].set_ylabel("Wave Direction (deg)")
+            for i in range(len(axs)):
+                axs[i].set_xlabel("Time (UTC)")
 
-        for i in range(len(axs)):
-            axs[i].set_xlabel("Time (UTC)")
-
-        plot_file = self.get_ancillary_filepath(title="wave_stats")
-        fig.savefig(plot_file)
-        plt.close(fig)
+            plot_file = self.get_ancillary_filepath(title="wave_stats")
+            fig.savefig(plot_file)
+            plt.close(fig)
