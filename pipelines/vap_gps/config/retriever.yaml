@@ -12,7 +12,7 @@ parameters:
 
     # How far to look for the next available data point
     range:
-      time: 61s
+      time: 60s
 
     # Width of the transformation
     width:

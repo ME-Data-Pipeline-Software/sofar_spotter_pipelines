@@ -8,7 +8,7 @@ PROJECT_DIR = Path.cwd()  # cwd changes to the newly-generated project when this
 
 def main():
     print("Template created for {{ cookiecutter.ingest_name }}. Checking selections...")
-    
+
     dataset_path = str(PROJECT_DIR / "config" / "dataset")
     if "{{ cookiecutter.data_standards }}" == "ACDD":
         os.remove(dataset_path + "-basic.yaml")

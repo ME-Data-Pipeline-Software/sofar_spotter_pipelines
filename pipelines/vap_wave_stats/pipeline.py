@@ -22,7 +22,7 @@ class VapWaveStats(TransformationPipeline):
         # Need to write in direction coordinate that will be used later
         for key in input_datasets:
             if "wave" in key:
-                directions = np.arange(0, 360, 2.0).astype('float32')
+                directions = np.arange(0, 360, 2.0).astype("float32")
                 input_datasets[key] = input_datasets[key].assign_coords(
                     {"direction": directions}
                 )
@@ -113,7 +113,10 @@ class VapWaveStats(TransformationPipeline):
             dataset["wave_dp"].plot(ax=ax[2], c=c1, label=r"D$_{peak}$")
             ax[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
             ax[2].set(
-                ylabel="Wave Direction [deg]", xlabel="", xticklabels=[], ylim=(-180, 180)
+                ylabel="Wave Direction [deg]",
+                xlabel="",
+                xticklabels=[],
+                ylim=(-180, 180),
             )
             c1 = haline(0.9)
             dataset["sst"].plot(ax=ax[3], c=c1, label=r"SST$")
@@ -125,14 +128,16 @@ class VapWaveStats(TransformationPipeline):
             plt.close(fig)
 
             # Plot wave roses
-            fig, ax = plt.subplots(subplot_kw={"projection":"polar"})
+            fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
             ax.set_theta_zero_location("N")
             ax.set_theta_direction(-1)
             # Use 360 degrees
-            dp = dataset['wave_dp'].copy(deep=True).values
+            dp = dataset["wave_dp"].copy(deep=True).values
             dp = dp % 360
             # Calculate the 2D histogram
-            H, dir_edges, vel_edges = graphics._histogram(dp, dataset['wave_hs'], 10, 0.5)
+            H, dir_edges, vel_edges = graphics._histogram(
+                dp, dataset["wave_hs"], 10, 0.5
+            )
             # Determine number of bins
             dir_bins = H.shape[0]
             h_bins = H.shape[1]
@@ -158,9 +163,7 @@ class VapWaveStats(TransformationPipeline):
                 # Increase the radius offset in all directions
                 r_offset = r_offset + H[:, h_bin]
             # Add the a legend for current speed bins
-            plt.legend(
-                loc="best", title="Hs [m]", bbox_to_anchor=(1.29, 1.00), ncol=1
-            )
+            plt.legend(loc="best", title="Hs [m]", bbox_to_anchor=(1.29, 1.00), ncol=1)
             # Get the r-ticks (polar y-ticks)
             yticks = plt.yticks()
             # Format y-ticks with  units for clarity
@@ -177,7 +180,11 @@ class VapWaveStats(TransformationPipeline):
             ax.set_theta_zero_location("N")
             ax.set_theta_direction(-1)
             # Use frequencies up to 0.5 Hz
-            spectrum = dataset["wave_dir_energy_density"].mean("time").sel(frequency=slice(None,0.5))
+            spectrum = (
+                dataset["wave_dir_energy_density"]
+                .mean("time")
+                .sel(frequency=slice(None, 0.5))
+            )
             # Create grid and plot
             a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), spectrum["frequency"])
             color_level_max = np.ceil(np.max(spectrum.values) * 10) / 10

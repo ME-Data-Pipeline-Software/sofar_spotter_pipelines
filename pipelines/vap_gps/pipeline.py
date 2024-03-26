@@ -18,7 +18,7 @@ class VapGPS(TransformationPipeline):
         return input_datasets
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
-        # (Optional) Use this hook to modify the dataset before qc is applied        
+        # (Optional) Use this hook to modify the dataset before qc is applied
         return dataset
 
     def hook_finalize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
@@ -41,5 +41,21 @@ class VapGPS(TransformationPipeline):
             )
 
             plot_file = self.get_ancillary_filepath(title="location")
+            fig.savefig(plot_file)
+            plt.close(fig)
+
+            # Timeseries plots of lat/lon
+            fig, ax = plt.subplots()
+            ax.plot(dataset["time"], dataset["lat"], "C0")
+            ax.tick_params(axis="y", color="C0", labelcolor="C0")
+            ax.set_ylabel("Latitude [degN]", color="C0")
+            ax2 = ax.twinx()
+            ax2.plot(dataset["time"], dataset["lon"], "C1")
+            ax2.tick_params(axis="y", color="C1", labelcolor="C1")
+            ax2.set_ylabel("Longitude [degE]", color="C1")
+            ax2.spines["left"].set_color("C0")
+            ax2.spines["right"].set_color("C1")
+
+            plot_file = self.get_ancillary_filepath(title="timeseries")
             fig.savefig(plot_file)
             plt.close(fig)

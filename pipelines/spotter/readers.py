@@ -7,8 +7,8 @@ from tsdat import DataReader
 
 
 class GPSReader(DataReader):
-    """Reads "LOC" filetype from spotter: GPS data
-    """
+    """Reads "LOC" filetype from spotter: GPS data"""
+
     def read(self, input_key: str) -> Union[xr.Dataset, Dict[str, xr.Dataset]]:
 
         df = pd.read_csv(input_key, delimiter=",", index_col=False)
@@ -30,29 +30,31 @@ class GPSReader(DataReader):
 
 
 class SSTReader(DataReader):
-    """Reads "SST" filetype from spotter: sea surface temperature data
-    """
+    """Reads "SST" filetype from spotter: sea surface temperature data"""
+
     def read(self, input_key: str) -> Union[xr.Dataset, Dict[str, xr.Dataset]]:
 
-        if not os.path.isfile(input_key.replace('SST','FLT')):
+        if not os.path.isfile(input_key.replace("SST", "FLT")):
             raise FileNotFoundError("Cannot read SST file without associated FLT file")
-        
+
         df = pd.read_csv(input_key, delimiter=",", index_col=False)
-        df_flt = pd.read_csv(input_key.replace('SST','FLT'), delimiter=",", index_col=False)
+        df_flt = pd.read_csv(
+            input_key.replace("SST", "FLT"), delimiter=",", index_col=False
+        )
 
         # Create timestamp
         time = "GPS_Epoch_Time(s)"
         # Get zero milliseconds from FLT file
-        t_zero = df_flt[time][2] - df_flt['millis'][2]/1000
+        t_zero = df_flt[time][2] - df_flt["millis"][2] / 1000
 
         # Counter resets at 4294967296 (2**32, must be a 32 bit number)
-        ms = df['millis'].values.copy()
+        ms = df["millis"].values.copy()
         flag = np.diff(ms) < 0
         if sum(flag):
             idx = np.where(flag)[0][0]
-            ms[idx+1:] += 4294967296
+            ms[idx + 1 :] += 4294967296
 
-        time_data = t_zero + ms/1000
+        time_data = t_zero + ms / 1000
 
         ds = xr.Dataset(
             data_vars={"sst": ([time], df["sst"].values)},

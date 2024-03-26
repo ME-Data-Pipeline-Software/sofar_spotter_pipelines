@@ -1,7 +1,7 @@
 attrs:
   title: GPS Location
   description:
-    Wave statistics measured by a Sofar Spotter wave buoy deployed in Clallam Bay, WA
+    GPS location measured by a Sofar Spotter wave buoy deployed in Clallam Bay, WA
   location_id: clallam
   dataset_name: gps
   data_level: b1
