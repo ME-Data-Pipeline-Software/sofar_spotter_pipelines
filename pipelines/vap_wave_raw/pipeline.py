@@ -1,6 +1,5 @@
 import numpy as np
 import xarray as xr
-import scipy.signal as ss
 from typing import Dict
 import matplotlib.pyplot as plt
 from mhkit import wave, dolfyn
@@ -9,8 +8,8 @@ from cmocean.cm import amp_r, dense, haline
 from tsdat import TransformationPipeline
 
 
-fs = 2.5  # Spotter sampling frequency
-wat = 1800  # window averaging time
+fs = 2.5  # Hz, Spotter sampling frequency
+wat = 1800  # s, window averaging time
 freq_slc = [0.0455, 1]  # 22 to 1 s periods
 
 
@@ -33,7 +32,7 @@ class VapWaves(TransformationPipeline):
                 f = np.fft.fftfreq(int(nfft), 1 / fs)
                 # Use only positive frequencies
                 freq = np.abs(f[1 : int(nfft / 2.0 + 1)])
-                # Trim frequency vector to > 0.0455 Hz (wave periods smaller than 22 s)
+                # Trim frequency vector to > 0.0455 Hz (wave periods between 1 and 22 s)
                 freq = freq[np.where((freq > freq_slc[0]) & (freq <= freq_slc[1]))]
                 input_datasets[key] = input_datasets[key].assign_coords(
                     {"frequency": freq.astype("float32")}
@@ -94,7 +93,7 @@ class VapWaves(TransformationPipeline):
         Tp = wave.resource.peak_period(pd_Szz)
         Tz = wave.resource.average_zero_crossing_period(pd_Szz)
 
-        # Check factor: generally should be greater than or equal to 1
+        # Check factor: generally should be around 1
         k = np.sqrt((Sxx + Syy) / Szz)
 
         # Calculate peak wave direction and spread

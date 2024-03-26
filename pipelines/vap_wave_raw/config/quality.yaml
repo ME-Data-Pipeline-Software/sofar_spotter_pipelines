@@ -67,7 +67,7 @@ managers:
       - classname: tsdat.qc.handlers.RecordQualityResults
         parameters:
           assessment: bad
-          meaning: "Check factor either null or < 1.0"
+          meaning: "Check factor either null or <= 0.5"
     apply_to:
       - DATA_VARS
     exclude: [wave_energy_density, wave_check_factor]

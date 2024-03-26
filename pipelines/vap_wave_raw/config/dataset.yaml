@@ -166,5 +166,5 @@ data_vars:
       long_name: Check Factor
       valid_min: 0.0
       valid_max: 2.549999952316284
-      comment: Should be less than or equal to unity
+      comment: Should be close to unity
       units: "1"
