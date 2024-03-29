@@ -128,7 +128,7 @@ class VapWaveStats(TransformationPipeline):
             plt.close(fig)
 
             # Plot wave roses
-            fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
+            fig, ax = plt.subplots(figsize=(8,6), subplot_kw={"projection": "polar"})
             ax.set_theta_zero_location("N")
             ax.set_theta_direction(-1)
             # Use 360 degrees
@@ -176,7 +176,7 @@ class VapWaveStats(TransformationPipeline):
             plt.close(fig)
 
             # Plot directional spectra
-            fig, ax = plt.subplots(subplot_kw=dict(projection="polar"))
+            fig, ax = plt.subplots(figsize=(8,6), subplot_kw=dict(projection="polar"))
             ax.set_theta_zero_location("N")
             ax.set_theta_direction(-1)
             # Use frequencies up to 0.5 Hz
