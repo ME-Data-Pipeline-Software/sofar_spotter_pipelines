@@ -14,6 +14,8 @@ readers:
 coords:
   time:
     name: GPS_Epoch_Time(s)
+    data_converters:
+      - classname: pipelines.spotter.converters.EpochTimeConverter
 
 data_vars:
   x:

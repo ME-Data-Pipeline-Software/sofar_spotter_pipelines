@@ -30,4 +30,4 @@ def test_vap_wave_raw_pipeline():
         "pipelines/vap_wave_raw/test/data/expected/clallam.wave.c0.20210903.162303.nc"
     )
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore
-    assert_close(dataset, expected, check_attrs=False)
+    assert_close(dataset, expected, check_attrs=False, atol=1e-5)

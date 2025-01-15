@@ -7,9 +7,7 @@ from tsdat import TransformationPipeline
 
 class VapGPS(TransformationPipeline):
     """---------------------------------------------------------------------------------
-    This is an example pipeline meant to demonstrate how one might set up a
-    pipeline using this template repository.
-
+    VAP pipeline for time-averaging GPS data into 10 minute windows.
     ---------------------------------------------------------------------------------"""
 
     def hook_customize_input_datasets(self, input_datasets) -> Dict[str, xr.Dataset]:
@@ -28,34 +26,38 @@ class VapGPS(TransformationPipeline):
 
     def hook_plot_dataset(self, dataset: xr.Dataset):
         # (Optional, recommended) Create plots.
+        plt.style.use("default")  # clear any styles that were set before
+        plt.style.use("shared/styling.mplstyle")
 
-        with plt.style.context("shared/styling.mplstyle"):
-            ## Plot GPS
-            fig, ax = plt.subplots(figsize=(7, 6))
-            ax.scatter(dataset["lon"], dataset["lat"])
-            ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
-            ax.ticklabel_format(axis="both", style="plain", useOffset=False)
-            ax.set(
-                xlim=(dataset.geospatial_lon_min, dataset.geospatial_lon_max),
-                ylim=(dataset.geospatial_lat_min, dataset.geospatial_lat_max),
-            )
+        ## Plot GPS
+        fig, ax = plt.subplots(figsize=(7, 6))
+        ax.scatter(dataset["lon"], dataset["lat"])
+        ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
+        ax.ticklabel_format(axis="both", style="plain", useOffset=False)
+        ax.set(
+            xlim=(dataset.geospatial_lon_min, dataset.geospatial_lon_max),
+            ylim=(dataset.geospatial_lat_min, dataset.geospatial_lat_max),
+        )
+        # Set grid below
+        ax.set_axisbelow(True)
+        ax.grid()
 
-            plot_file = self.get_ancillary_filepath(title="location")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        plt.xticks(rotation=45)
+        plot_file = self.get_ancillary_filepath(title="location")
+        fig.savefig(plot_file)
 
-            # Timeseries plots of lat/lon
-            fig, ax = plt.subplots()
-            ax.plot(dataset["time"], dataset["lat"], "C0")
-            ax.tick_params(axis="y", color="C0", labelcolor="C0")
-            ax.set_ylabel("Latitude [degN]", color="C0")
-            ax2 = ax.twinx()
-            ax2.plot(dataset["time"], dataset["lon"], "C1")
-            ax2.tick_params(axis="y", color="C1", labelcolor="C1")
-            ax2.set_ylabel("Longitude [degE]", color="C1")
-            ax2.spines["left"].set_color("C0")
-            ax2.spines["right"].set_color("C1")
+        # Timeseries plots of lat/lon
+        fig, ax = plt.subplots()
+        ax.plot(dataset["time"], dataset["lat"], "C0")
+        ax.tick_params(axis="y", color="C0", labelcolor="C0")
+        ax.set_ylabel("Latitude [degN]", color="C0")
+        ax2 = ax.twinx()
+        ax2.plot(dataset["time"], dataset["lon"], "C1")
+        ax2.tick_params(axis="y", color="C1", labelcolor="C1")
+        ax2.set_ylabel("Longitude [degE]", color="C1")
+        ax2.spines["left"].set_color("C0")
+        ax2.spines["right"].set_color("C1")
 
-            plot_file = self.get_ancillary_filepath(title="timeseries")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        plot_file = self.get_ancillary_filepath(title="timeseries")
+        fig.savefig(plot_file)
+        plt.close("all")

@@ -7,10 +7,10 @@ attrs:
   data_level: b1
   geospatial_lat_min: 48.2735
   geospatial_lat_max: 48.2742
-  geospatial_lat_units: degrees_north
+  geospatial_lat_units: degree_north
   geospatial_lon_min: -124.2870
   geospatial_lon_max: -124.2852
-  geospatial_lon_units: degrees_east
+  geospatial_lon_units: degree_east
 
 coords:
   time:
@@ -27,7 +27,7 @@ data_vars:
     dims: [time]
     dtype: float32
     attrs:
-      units: degrees_north
+      units: degree_north
       long_name: Latitude
       standard_name: latitude
       valid_min: -90
@@ -36,7 +36,7 @@ data_vars:
     dims: [time]
     dtype: float32
     attrs:
-      units: degrees_east
+      units: degree_east
       long_name: Longitude
       standard_name: longitude
       valid_min: -180

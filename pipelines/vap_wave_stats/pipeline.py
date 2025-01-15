@@ -2,6 +2,7 @@ import numpy as np
 import xarray as xr
 from typing import Dict
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from cmocean.cm import amp_r, dense, haline
 from mhkit.tidal import graphics
 
@@ -10,9 +11,7 @@ from tsdat import TransformationPipeline
 
 class VapWaveStats(TransformationPipeline):
     """---------------------------------------------------------------------------------
-    This is an example pipeline meant to demonstrate how one might set up a
-    pipeline using this template repository.
-
+    VAP pipeline for combining Sofar Spotter data products.
     ---------------------------------------------------------------------------------"""
 
     def hook_customize_input_datasets(self, input_datasets) -> Dict[str, xr.Dataset]:
@@ -77,129 +76,193 @@ class VapWaveStats(TransformationPipeline):
 
     def hook_plot_dataset(self, dataset: xr.Dataset):
         # (Optional, recommended) Create plots.
+        plt.style.use("default")  # clear any styles that were set before
 
-        with plt.style.context("shared/styling.mplstyle"):
-            ## Plot GPS
-            fig, ax = plt.subplots(figsize=(7, 6))
-            ax.scatter(dataset["lon"], dataset["lat"])
-            ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
-            ax.ticklabel_format(axis="both", style="plain", useOffset=False)
-            ax.set(
-                xlim=(dataset.geospatial_lon_min, dataset.geospatial_lon_max),
-                ylim=(dataset.geospatial_lat_min, dataset.geospatial_lat_max),
+        # Wave stats
+        if "air_pressure" in dataset:
+            n = 5
+        else:
+            n = 4
+
+        fig, ax = plt.subplots(n, 1, figsize=(11, 7))
+        fig.subplots_adjust(left=0.1, right=0.78, top=0.95, bottom=0.1, hspace=0.1)
+
+        c1 = amp_r(0.10)
+        ax[0].plot(
+            dataset["time"].values,
+            dataset["wave_hs"],
+            ".-",
+            label="Significant Wave Height",
+            color=c1,
+        )
+        ax[0].set(ylabel="Height [m]")
+
+        c1, c2, c3, c4 = dense(0.15), dense(0.35), dense(0.65), dense(0.95)
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_ta"],
+            ".-",
+            label="Mean Period",
+            color=c1,
+        )
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_tp"],
+            ".-",
+            label="Peak Period",
+            color=c2,
+        )
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_te"],
+            ".-",
+            label="Energy Period",
+            color=c3,
+        )
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_tz"],
+            ".-",
+            label="Zero Crossing Period",
+            color=c4,
+        )
+        ax[1].set(ylabel="Period [s]")
+
+        c1, c2, c3, c4 = haline(0.10), haline(0.30), haline(0.50), haline(0.70)
+        ax[2].plot(
+            dataset["time"].values,
+            dataset["wave_dp"],
+            ".-",
+            label="Peak Direction",
+            color=c1,
+        )
+        ax[2].plot(
+            dataset["time"].values,
+            dataset["wave_spread"],
+            ".-",
+            label="Peak Spread",
+            color=c3,
+        )
+        ax[2].set(ylabel="Direction [deg]")
+
+        ax[3].plot(
+            dataset["time"].values,
+            dataset["sst"],
+            ".-",
+            label="Sea Surface Temperature",
+            color="black",
+        )
+        ax[3].set(ylabel="Temperature\n[deg C]")
+
+        if "air_pressure" in dataset:
+            ax[4].plot(
+                dataset["time"].values,
+                dataset["air_pressure"],
+                ".-",
+                label="Air Pressure",
+                color="black",
             )
+            ax[4].set(ylabel="Pressure [hPa]")
 
-            plot_file = self.get_ancillary_filepath(title="location")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        for a in ax:
+            a.legend(loc="upper left", bbox_to_anchor=[1.01, 1.0], handlelength=1.5)
+        for a in ax[:-1]:
+            a.set(xticklabels=[])
+        date = dataset.time[0].values.astype(str).split("T")[0]
+        ax[0].set(title=f"{dataset.datastream} on {date}")
+        ax[-1].xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+        ax[-1].set(xlabel="Time (UTC)")
 
-            # Wave stats
-            fig, ax = plt.subplots(nrows=4)
-            # Plot Wave Heights
-            c2 = amp_r(0.50)
-            dataset["wave_hs"].plot(ax=ax[0], c=c2, label=r"H$_{sig}$")
-            ax[0].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-            ax[0].set(ylabel="Wave Height [m]", xlabel="", xticklabels=[], ylim=(0, 2))
+        plot_file = self.get_ancillary_filepath(title="wave_stats")
+        fig.savefig(plot_file)
 
-            # Plot Wave Periods
-            c1, c2 = dense(0.3), dense(0.6)
-            dataset["wave_ta"].plot(ax=ax[1], c=c1, label=r"T$_{mean}$")
-            dataset["wave_tp"].plot(ax=ax[1], c=c2, label=r"T$_{peak}$")
-            ax[1].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-            ax[1].set(ylabel="Wave Period [s]", xlabel="", xticklabels=[], ylim=(0, 22))
+        ## Plot GPS
+        fig, ax = plt.subplots(figsize=(6, 6))
+        fig.subplots_adjust(left=0.16, right=0.95, top=0.95, bottom=0.17)
+        ax.scatter(dataset["lon"], dataset["lat"])
+        ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
+        ax.ticklabel_format(axis="both", style="plain", useOffset=False)
+        ax.set(
+            xlim=(dataset.geospatial_lon_min, dataset.geospatial_lon_max),
+            ylim=(dataset.geospatial_lat_min, dataset.geospatial_lat_max),
+        )
+        # Set grid below
+        ax.set_axisbelow(True)
+        ax.grid()
+        plt.xticks(rotation=45)
+        plot_file = self.get_ancillary_filepath(title="location")
+        fig.savefig(plot_file)
 
-            # Plot Wave Direction
-            c1 = haline(0.5)
-            dataset["wave_dp"].plot(ax=ax[2], c=c1, label=r"D$_{peak}$")
-            ax[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-            ax[2].set(
-                ylabel="Wave Direction [deg]",
-                xlabel="",
-                xticklabels=[],
-                ylim=(-180, 180),
+        # Plot wave roses
+        fig, ax = plt.subplots(figsize=(8, 6), subplot_kw={"projection": "polar"})
+        ax.set_theta_zero_location("N")
+        ax.set_theta_direction(-1)
+        # Use 360 degrees
+        dp = dataset["wave_dp"].copy(deep=True).values
+        dp = dp % 360
+        # Calculate the 2D histogram
+        H, dir_edges, vel_edges = graphics._histogram(dp, dataset["wave_hs"], 10, 0.5)
+        # Determine number of bins
+        dir_bins = H.shape[0]
+        h_bins = H.shape[1]
+        # Create the angles
+        thetas = np.arange(0, 2 * np.pi, 2 * np.pi / dir_bins)
+        # Set bar color based on wind speed
+        colors = plt.cm.Wistia(np.linspace(0, 1.0, h_bins))
+        # Set the current speed bin label names
+        # Calculate the 2D histogram
+        labels = [f"{i:.1f}-{j:.1f}" for i, j in zip(vel_edges[:-1], vel_edges[1:])]
+        # Initialize the vertical-offset (polar radius) for the stacked bar chart.
+        r_offset = np.zeros(dir_bins)
+        for h_bin in range(h_bins):
+            # Plot fist set of bars in all directions
+            ax.bar(
+                thetas,
+                H[:, h_bin],
+                width=(2 * np.pi / dir_bins),
+                bottom=r_offset,
+                color=colors[h_bin],
+                label=labels[h_bin],
             )
-            c1 = haline(0.9)
-            dataset["sst"].plot(ax=ax[3], c=c1, label=r"SST$")
-            ax[3].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-            ax[3].set(ylabel="Temperature [deg C]", xlabel="Time (UTC)", ylim=(5, 20))
+            # Increase the radius offset in all directions
+            r_offset = r_offset + H[:, h_bin]
+        # Add the a legend for current speed bins
+        plt.legend(loc="best", title="Hs [m]", bbox_to_anchor=(1.29, 1.00), ncol=1)
+        # Get the r-ticks (polar y-ticks)
+        yticks = plt.yticks()
+        # Format y-ticks with  units for clarity
+        rticks = [f"{y:.1f}%" for y in yticks[0]]
+        # Set the y-ticks
+        ax.set_yticks(yticks[0], rticks)
 
-            plot_file = self.get_ancillary_filepath(title="wave_stats")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        plot_file = self.get_ancillary_filepath(title="wave_rose")
+        fig.savefig(plot_file)
 
-            # Plot wave roses
-            fig, ax = plt.subplots(figsize=(8,6), subplot_kw={"projection": "polar"})
-            ax.set_theta_zero_location("N")
-            ax.set_theta_direction(-1)
-            # Use 360 degrees
-            dp = dataset["wave_dp"].copy(deep=True).values
-            dp = dp % 360
-            # Calculate the 2D histogram
-            H, dir_edges, vel_edges = graphics._histogram(
-                dp, dataset["wave_hs"], 10, 0.5
-            )
-            # Determine number of bins
-            dir_bins = H.shape[0]
-            h_bins = H.shape[1]
-            # Create the angles
-            thetas = np.arange(0, 2 * np.pi, 2 * np.pi / dir_bins)
-            # Set bar color based on wind speed
-            colors = plt.cm.Wistia(np.linspace(0, 1.0, h_bins))
-            # Set the current speed bin label names
-            # Calculate the 2D histogram
-            labels = [f"{i:.1f}-{j:.1f}" for i, j in zip(vel_edges[:-1], vel_edges[1:])]
-            # Initialize the vertical-offset (polar radius) for the stacked bar chart.
-            r_offset = np.zeros(dir_bins)
-            for h_bin in range(h_bins):
-                # Plot fist set of bars in all directions
-                ax.bar(
-                    thetas,
-                    H[:, h_bin],
-                    width=(2 * np.pi / dir_bins),
-                    bottom=r_offset,
-                    color=colors[h_bin],
-                    label=labels[h_bin],
-                )
-                # Increase the radius offset in all directions
-                r_offset = r_offset + H[:, h_bin]
-            # Add the a legend for current speed bins
-            plt.legend(loc="best", title="Hs [m]", bbox_to_anchor=(1.29, 1.00), ncol=1)
-            # Get the r-ticks (polar y-ticks)
-            yticks = plt.yticks()
-            # Format y-ticks with  units for clarity
-            rticks = [f"{y:.1f}%" for y in yticks[0]]
-            # Set the y-ticks
-            ax.set_yticks(yticks[0], rticks)
+        # Plot directional spectra
+        fig, ax = plt.subplots(figsize=(8, 6), subplot_kw=dict(projection="polar"))
+        ax.set_theta_zero_location("N")
+        ax.set_theta_direction(-1)
+        # Use frequencies up to 0.5 Hz
+        spectrum = (
+            dataset["wave_dir_energy_density"]
+            .mean("time")
+            .sel(frequency=slice(None, 0.5))
+        )
+        # Create grid and plot
+        a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), spectrum["frequency"])
+        color_level_max = np.ceil(np.max(spectrum.values) * 10) / 10
+        levels = np.linspace(0, color_level_max, 11)
+        c = ax.contourf(a, f, spectrum, levels=levels, cmap="Blues")
 
-            plot_file = self.get_ancillary_filepath(title="wave_rose")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        cbar = plt.colorbar(c)
+        cbar.set_label("ESD [m$^2$ s/deg]", rotation=270, labelpad=20)
+        ylabels = ax.get_yticklabels()
+        ylabels = [ilabel.get_text() for ilabel in ax.get_yticklabels()]
+        ylabels = [ilabel + "Hz" for ilabel in ylabels]
+        ticks_loc = ax.get_yticks()
+        ax.set_yticks(ticks_loc)
+        ax.set_yticklabels(ylabels)
 
-            # Plot directional spectra
-            fig, ax = plt.subplots(figsize=(8,6), subplot_kw=dict(projection="polar"))
-            ax.set_theta_zero_location("N")
-            ax.set_theta_direction(-1)
-            # Use frequencies up to 0.5 Hz
-            spectrum = (
-                dataset["wave_dir_energy_density"]
-                .mean("time")
-                .sel(frequency=slice(None, 0.5))
-            )
-            # Create grid and plot
-            a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), spectrum["frequency"])
-            color_level_max = np.ceil(np.max(spectrum.values) * 10) / 10
-            levels = np.linspace(0, color_level_max, 11)
-            c = ax.contourf(a, f, spectrum, levels=levels, cmap="Blues")
-
-            cbar = plt.colorbar(c)
-            cbar.set_label(f"ESD [m^2 s/deg]", rotation=270, labelpad=20)
-            ylabels = ax.get_yticklabels()
-            ylabels = [ilabel.get_text() for ilabel in ax.get_yticklabels()]
-            ylabels = [ilabel + "Hz" for ilabel in ylabels]
-            ticks_loc = ax.get_yticks()
-            ax.set_yticks(ticks_loc)
-            ax.set_yticklabels(ylabels)
-
-            plot_file = self.get_ancillary_filepath(title="directional_spectra")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        plot_file = self.get_ancillary_filepath(title="directional_spectra")
+        fig.savefig(plot_file)
+        plt.close("all")

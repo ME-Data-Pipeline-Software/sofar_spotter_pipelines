@@ -2,6 +2,7 @@ import numpy as np
 import xarray as xr
 from typing import Dict
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from mhkit import wave, dolfyn
 from cmocean.cm import amp_r, dense, haline
 
@@ -15,9 +16,7 @@ freq_slc = [0.0455, 1]  # 22 to 1 s periods
 
 class VapWaves(TransformationPipeline):
     """---------------------------------------------------------------------------------
-    This is an example pipeline meant to demonstrate how one might set up a
-    pipeline using this template repository.
-
+    VAP pipeline for calculating wave statistics from a Sofar Spotter wave buoy data.
     ---------------------------------------------------------------------------------"""
 
     def hook_customize_input_datasets(self, input_datasets) -> Dict[str, xr.Dataset]:
@@ -60,7 +59,7 @@ class VapWaves(TransformationPipeline):
                     ds["z"],
                 ]
             ),
-            coords={"dir": ["x", "y", "z"], "time": ds.time},
+            coords={"dir": ["x", "y", "z"], "time": ds["time"]},
         )
 
         ## Using dolfyn to create spectra
@@ -143,55 +142,99 @@ class VapWaves(TransformationPipeline):
 
     def hook_plot_dataset(self, dataset: xr.Dataset):
         # (Optional, recommended) Create plots.
+        plt.style.use("default")  # clear any styles that were set before
 
-        with plt.style.context("shared/styling.mplstyle"):
-            # Plot wave spectra
-            t = dolfyn.time.dt642date(dataset.time)
+        # Wave spectrum
+        fig, ax = plt.subplots(figsize=(6, 6))
+        fig.subplots_adjust(left=0.14, right=0.95, top=0.95, bottom=0.1)
+        ax.loglog(
+            dataset["frequency"],
+            dataset["wave_energy_density"].mean("time"),
+            label="vertical",
+        )
+        m = -4
+        x = np.logspace(-1, 0)
+        y = 10 ** (-4) * x**m
+        ax.loglog(x, y, "--", c="black", label="f^-4")
+        ax.set(
+            ylim=(0.0001, 10),
+            xlabel="Frequency [Hz]",
+            ylabel="Energy Density [m^2/Hz]",
+        )
+        plot_file = self.get_ancillary_filepath(title="elevation_spectrum")
+        fig.savefig(plot_file)
 
-            fig, ax = plt.subplots(figsize=(6, 6))
-            ax.loglog(
-                dataset["frequency"],
-                dataset["wave_energy_density"].mean("time"),
-                label="vertical",
-            )
-            m = -4
-            x = np.logspace(-1, 0)
-            y = 10 ** (-4) * x**m
-            ax.loglog(x, y, "--", c="black", label="f^-4")
-            ax.set(
-                ylim=(0.0001, 10),
-                xlabel="Frequency [Hz]",
-                ylabel="Energy Density [m^2/Hz]",
-            )
-            plot_file = self.get_ancillary_filepath(title="elevation_spectrum")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        # Wave stats
+        fig, ax = plt.subplots(3, 1, figsize=(10, 7))
+        fig.subplots_adjust(left=0.1, right=0.77, top=0.95, bottom=0.1, hspace=0.1)
 
-            # Wave stats
-            fig, axs = plt.subplots(nrows=3)
+        c1 = amp_r(0.10)
+        ax[0].plot(
+            dataset["time"].values,
+            dataset["wave_hs"],
+            ".-",
+            label="Significant Wave Height",
+            color=c1,
+        )
+        ax[0].set(ylabel="Height [m]")
 
-            # Plot Wave Heights
-            c2 = amp_r(0.50)
-            dataset["wave_hs"].plot(ax=axs[0], c=c2, label=r"H$_{sig}$")
-            axs[0].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-            axs[0].set_ylabel("Wave Height (m)")
+        c1, c2, c3, c4 = dense(0.15), dense(0.35), dense(0.65), dense(0.95)
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_ta"],
+            ".-",
+            label="Mean Period",
+            color=c1,
+        )
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_tp"],
+            ".-",
+            label="Peak Period",
+            color=c2,
+        )
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_te"],
+            ".-",
+            label="Energy Period",
+            color=c3,
+        )
+        ax[1].plot(
+            dataset["time"].values,
+            dataset["wave_tz"],
+            ".-",
+            label="Zero Crossing Period",
+            color=c4,
+        )
+        ax[1].set(ylabel="Period [s]")
 
-            # Plot Wave Periods
-            c1, c2 = dense(0.3), dense(0.6)
-            dataset["wave_ta"].plot(ax=axs[1], c=c1, label=r"T$_{mean}$")
-            dataset["wave_tp"].plot(ax=axs[1], c=c2, label=r"T$_{peak}$")
-            axs[1].legend(bbox_to_anchor=(1, -0.10), ncol=3)
-            axs[1].set_ylabel("Wave Period (s)")
+        c1, c2, c3, c4 = haline(0.10), haline(0.30), haline(0.50), haline(0.70)
+        ax[2].plot(
+            dataset["time"].values,
+            dataset["wave_dp"],
+            ".-",
+            label="Peak Direction",
+            color=c1,
+        )
+        ax[2].plot(
+            dataset["time"].values,
+            dataset["wave_spread"],
+            ".-",
+            label="Peak Spread",
+            color=c3,
+        )
+        ax[2].set(ylabel="Direction [deg]")
 
-            # Plot Wave Directions
-            c1 = haline(0.5)
-            dataset["wave_dp"].plot(ax=axs[2], c=c1, label=r"D$_{peak}$")
-            axs[2].legend(bbox_to_anchor=(1, -0.10), ncol=2)
-            axs[2].set_ylabel("Wave Direction (deg)")
+        for a in ax:
+            a.legend(loc="upper left", bbox_to_anchor=[1.01, 1.0], handlelength=1.5)
+        for a in ax[:-1]:
+            a.set(xticklabels=[])
+        date = dataset.time[0].values.astype(str).split("T")[0]
+        ax[0].set(title=f"{dataset.datastream} on {date}")
+        ax[-1].xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+        ax[-1].set(xlabel="Time (UTC)")
 
-            for i in range(len(axs)):
-                axs[i].set_xlabel("Time (UTC)")
-
-            plot_file = self.get_ancillary_filepath(title="wave_stats")
-            fig.savefig(plot_file)
-            plt.close(fig)
+        plot_file = self.get_ancillary_filepath(title="wave_stats")
+        fig.savefig(plot_file)
+        plt.close("all")

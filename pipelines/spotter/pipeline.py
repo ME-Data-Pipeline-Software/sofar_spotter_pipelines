@@ -8,9 +8,6 @@ from tsdat import IngestPipeline
 class Waves(IngestPipeline):
     """--------------------------------------------------------------------------------
     SPOTTER BUOY INGESTION PIPELINE
-
-    Wave data taken in Clallam Bay over a month-long deployment in Aug-Sep 2021
-
     --------------------------------------------------------------------------------"""
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
@@ -33,9 +30,9 @@ class Waves(IngestPipeline):
         if "pos" in ds.qualifier:
             fig, ax = plt.subplots()
 
-            ax.plot(ds.time, ds["x"], label="surge")
-            ax.plot(ds.time, ds["y"], label="sway")
-            ax.plot(ds.time, ds["z"], label="heave")
+            ax.plot(ds["time"], ds["x"], label="surge")
+            ax.plot(ds["time"], ds["y"], label="sway")
+            ax.plot(ds["time"], ds["z"], label="heave")
 
             ax.set_title("")  # Remove bogus title created by xarray
             ax.legend(ncol=2, bbox_to_anchor=(1, -0.05))
@@ -53,6 +50,9 @@ class Waves(IngestPipeline):
             ax.scatter(ds["lon"], ds["lat"])
             ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
             ax.ticklabel_format(axis="both", style="plain", useOffset=False)
+            # Set grid below
+            ax.set_axisbelow(True)
+            ax.grid()
 
             plot_file = self.get_ancillary_filepath(title="location")
             fig.savefig(plot_file)
