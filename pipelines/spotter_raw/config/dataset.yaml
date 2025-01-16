@@ -1,0 +1,202 @@
+attrs:
+  title: Spotter raw measurements   
+  location_id: pnnl
+  dataset_name: spotter
+  data_level: a1
+  qualifier: "XXXXX"
+  description: " "
+
+  summary: Raw buoy measurements recorded by a Sofar Spotter wave buoy deployed at PacWave, OR.
+  keywords:
+    OCEAN WAVES, GRAVITY WAVES, WIND WAVES
+  Conventions: "CD-1.6, ACDD-1.3, IOOS-1.2"
+  featureType: timeseries
+  id: Spotter
+  infoUrl: https://www.osti.gov/biblio/1842840
+  license: Freely Distributed
+  naming_authority: gov.pnnl.sequim
+  standard_name_vocabulary: CF Standard Name Table v84
+  # Attribution
+  creator_country: USA
+  creator_email: ""
+  creator_institution: Oregon State University
+  creator_institution_url: https://ceoas.oregonstate.edu/
+  creator_sector: academic
+  creator_type: institution
+  creator_url: https://ceoas.oregonstate.edu/
+  institution: Oregon State University
+  publisher_country: USA
+  publisher_email: tsdat@pnnl.gov
+  publisher_institution: Pacific Northwest National Laboratory (PNNL)
+  publisher_url: https://www.pnnl.gov/
+  acknowledgement: Data efforts funded by US Department of Energy
+  platform: buoy
+  platform_vocabulary: https://mmisw.org/ont/ioos/platform
+  platform_id: SPOT-
+  platform_name: Sofar Spotter Wave Buoy
+  geospatial_lat_min: 48.2735
+  geospatial_lat_max: 48.2742
+  geospatial_lat_units: degree_north
+  geospatial_lon_min: -124.2870
+  geospatial_lon_max: -124.2852
+  geospatial_lon_units: degree_east
+  geospatial_vertical_min: 0.0
+  geospatial_vertical_max: 0.0
+  geospatial_vertical_units: meters
+  geospatial_vertical_origin: sea surface
+  geospatial_vertical_positive: up
+  geospatial_vertical_resolution: 1 m
+  source: insitu observations
+
+coords:
+  time:
+    dims: [time]
+    dtype: datetime64[ms]
+    attrs:
+      units: Seconds since 1970-01-01 00:00:00 UTC
+      long_name: Time
+      standard_name: time
+      cf_role: timeseries_id
+      coverage_content_type: coordinate
+      timezone: UTC
+
+data_vars:
+  x:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Buoy Surge
+      standard_name: platform_surge
+      units: m
+      valid_min: -15
+      valid_max: 15
+  y:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Buoy Sway
+      standard_name: platform_sway
+      units: m
+      valid_min: -15
+      valid_max: 15
+  z:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Buoy Heave
+      standard_name: platform_heave
+      units: m
+      valid_min: -15
+      valid_max: 15
+
+  latitude:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Latitude
+      standard_name: latitude
+      units: degree_north
+      valid_min: -90
+      valid_max: 90
+  longitude:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Longitude
+      standard_name: longitude
+      units: degree_east
+      valid_min: -180
+      valid_max: 180
+
+  sea_surface_temperature:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Sea Surface Temperature
+      standard_name: sea_surface_temperature
+      units: degree_C
+      coverage_content_type: physicalMeasurement
+      valid_min: 0
+      valid_max: 40
+
+  air_pressure:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Mean Barometric Pressure
+      standard_name: air_pressure
+      units: hPa
+      coverage_content_type: physicalMeasurement
+      valid_min: 800
+      valid_max: 1100
+
+  air_temperature:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Air Temperature
+      standard_name: air_temperature
+      units: degree_C
+      coverage_content_type: physicalMeasurement
+      valid_min: -20
+      valid_max: 40
+
+  humidity:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Relative Humidity
+      standard_name: relative_humidity
+      units: "%"
+      coverage_content_type: physicalMeasurement
+      valid_min: 0
+      valid_max: 100
+
+  solar_panel_voltage:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Solar Panel Voltage
+      units: V"
+  solar_panel_current:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Solar Panel Current
+      units: A
+  battery_voltage:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Battery Voltage
+      units: V
+  battery_current:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Battery Current
+      units: A
+  bus_voltage:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Bus Voltage
+      units: V
+  bus_current:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Bus Current
+      units: A
+  charge_state:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Battery Charge State
+      units: "1"
+  charge_fault:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Battery Charge Fault
+      units: "1"
