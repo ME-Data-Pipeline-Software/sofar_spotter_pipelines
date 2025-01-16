@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from mhkit import wave, dolfyn
 from cmocean.cm import amp_r, dense, haline
-
 from tsdat import TransformationPipeline
 
 
@@ -165,64 +164,59 @@ class VapWaves(TransformationPipeline):
         fig.savefig(plot_file)
 
         # Wave stats
-        fig, ax = plt.subplots(3, 1, figsize=(10, 7))
-        fig.subplots_adjust(left=0.1, right=0.77, top=0.95, bottom=0.1, hspace=0.1)
-
-        c1 = amp_r(0.10)
+        fig, ax = plt.subplots(3, 1, figsize=(10, 7), constrained_layout=True)
         ax[0].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_hs"],
             ".-",
             label="Significant Wave Height",
-            color=c1,
+            color=amp_r(0.10),
         )
         ax[0].set(ylabel="Height [m]")
 
-        c1, c2, c3, c4 = dense(0.15), dense(0.35), dense(0.65), dense(0.95)
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_ta"],
             ".-",
             label="Mean Period",
-            color=c1,
+            color=dense(0.15),
         )
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_tp"],
             ".-",
             label="Peak Period",
-            color=c2,
+            color=dense(0.35),
         )
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_te"],
             ".-",
             label="Energy Period",
-            color=c3,
+            color=dense(0.65),
         )
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_tz"],
             ".-",
             label="Zero Crossing Period",
-            color=c4,
+            color=dense(0.95),
         )
         ax[1].set(ylabel="Period [s]")
 
-        c1, c2, c3, c4 = haline(0.10), haline(0.30), haline(0.50), haline(0.70)
         ax[2].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_dp"],
             ".-",
             label="Peak Direction",
-            color=c1,
+            color=haline(0.10),
         )
         ax[2].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_spread"],
             ".-",
             label="Peak Spread",
-            color=c3,
+            color=haline(0.50),
         )
         ax[2].set(ylabel="Direction [deg]")
 

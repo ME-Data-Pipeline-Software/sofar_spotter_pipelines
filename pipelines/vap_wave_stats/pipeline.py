@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from cmocean.cm import amp_r, dense, haline
 from mhkit.tidal import graphics
-
 from tsdat import TransformationPipeline
 
 
@@ -84,69 +83,64 @@ class VapWaveStats(TransformationPipeline):
         else:
             n = 4
 
-        fig, ax = plt.subplots(n, 1, figsize=(11, 7))
-        fig.subplots_adjust(left=0.1, right=0.78, top=0.95, bottom=0.1, hspace=0.1)
-
-        c1 = amp_r(0.10)
+        fig, ax = plt.subplots(n, 1, figsize=(11, 7), constrained_layout=True)
         ax[0].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_hs"],
             ".-",
             label="Significant Wave Height",
-            color=c1,
+            color=amp_r(0.10),
         )
         ax[0].set(ylabel="Height [m]")
 
-        c1, c2, c3, c4 = dense(0.15), dense(0.35), dense(0.65), dense(0.95)
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_ta"],
             ".-",
             label="Mean Period",
-            color=c1,
+            color=dense(0.15),
         )
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_tp"],
             ".-",
             label="Peak Period",
-            color=c2,
+            color=dense(0.35),
         )
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_te"],
             ".-",
             label="Energy Period",
-            color=c3,
+            color=dense(0.65),
         )
         ax[1].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_tz"],
             ".-",
             label="Zero Crossing Period",
-            color=c4,
+            color=dense(0.95),
         )
         ax[1].set(ylabel="Period [s]")
 
-        c1, c2, c3, c4 = haline(0.10), haline(0.30), haline(0.50), haline(0.70)
         ax[2].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_dp"],
             ".-",
             label="Peak Direction",
-            color=c1,
+            color=haline(0.10),
         )
         ax[2].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["wave_spread"],
             ".-",
             label="Peak Spread",
-            color=c3,
+            color=haline(0.50),
         )
         ax[2].set(ylabel="Direction [deg]")
 
         ax[3].plot(
-            dataset["time"].values,
+            dataset["time"],
             dataset["sst"],
             ".-",
             label="Sea Surface Temperature",
@@ -156,7 +150,7 @@ class VapWaveStats(TransformationPipeline):
 
         if "air_pressure" in dataset:
             ax[4].plot(
-                dataset["time"].values,
+                dataset["time"],
                 dataset["air_pressure"],
                 ".-",
                 label="Air Pressure",
@@ -168,9 +162,8 @@ class VapWaveStats(TransformationPipeline):
             a.legend(loc="upper left", bbox_to_anchor=[1.01, 1.0], handlelength=1.5)
         for a in ax[:-1]:
             a.set(xticklabels=[])
-        date = dataset.time[0].values.astype(str).split("T")[0]
-        ax[0].set(title=f"{dataset.datastream} on {date}")
-        ax[-1].xaxis.set_major_formatter(mdates.DateFormatter("%H:%M:%S"))
+        ax[-1].tick_params(labelrotation=45)
+        ax[-1].xaxis.set_major_formatter(mdates.DateFormatter("%D %H"))
         ax[-1].set(xlabel="Time (UTC)")
 
         plot_file = self.get_ancillary_filepath(title="wave_stats")
@@ -189,12 +182,15 @@ class VapWaveStats(TransformationPipeline):
         # Set grid below
         ax.set_axisbelow(True)
         ax.grid()
-        plt.xticks(rotation=45)
+        ax.tick_params(labelrotation=45)
+
         plot_file = self.get_ancillary_filepath(title="location")
         fig.savefig(plot_file)
 
         # Plot wave roses
-        fig, ax = plt.subplots(figsize=(8, 6), subplot_kw={"projection": "polar"})
+        fig, ax = plt.subplots(
+            figsize=(8, 6), subplot_kw={"projection": "polar"}, constrained_layout=True
+        )
         ax.set_theta_zero_location("N")
         ax.set_theta_direction(-1)
         # Use 360 degrees
@@ -239,7 +235,9 @@ class VapWaveStats(TransformationPipeline):
         fig.savefig(plot_file)
 
         # Plot directional spectra
-        fig, ax = plt.subplots(figsize=(8, 6), subplot_kw=dict(projection="polar"))
+        fig, ax = plt.subplots(
+            figsize=(8, 6), subplot_kw=dict(projection="polar"), constrained_layout=True
+        )
         ax.set_theta_zero_location("N")
         ax.set_theta_direction(-1)
         # Use frequencies up to 0.5 Hz
