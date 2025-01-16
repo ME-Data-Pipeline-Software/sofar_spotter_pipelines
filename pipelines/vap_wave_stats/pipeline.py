@@ -28,6 +28,7 @@ class VapWaveStats(TransformationPipeline):
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
         # (Optional) Use this hook to modify the dataset before qc is applied
+        dataset.attrs.pop("description")
 
         # Calculate directional wave spectrum
         a0 = dataset["wave_energy_density"] / np.pi
