@@ -242,22 +242,19 @@ class VapWaveStats(TransformationPipeline):
         ax.set_theta_zero_location("N")
         ax.set_theta_direction(-1)
         # Use frequencies up to 0.5 Hz
-        spectrum = (
-            dataset["wave_dir_energy_density"]
-            .mean("time")
-            .sel(frequency=slice(None, 0.5))
-        )
+        spectrum = dataset["wave_dir_energy_density"].mean("time")
         # Create grid and plot
-        a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), spectrum["frequency"])
+        a, f = np.meshgrid(np.deg2rad(spectrum["direction"]), 1 / spectrum["frequency"])
         color_level_max = np.ceil(np.max(spectrum.values) * 10) / 10
         levels = np.linspace(0, color_level_max, 11)
         c = ax.contourf(a, f, spectrum, levels=levels, cmap="Blues")
 
         cbar = plt.colorbar(c)
         cbar.set_label("ESD [m$^2$ s/deg]", rotation=270, labelpad=20)
+        ax.set_ylim(1, 12)
         ylabels = ax.get_yticklabels()
         ylabels = [ilabel.get_text() for ilabel in ax.get_yticklabels()]
-        ylabels = [ilabel + "Hz" for ilabel in ylabels]
+        ylabels = [ilabel + " s" for ilabel in ylabels]
         ticks_loc = ax.get_yticks()
         ax.set_yticks(ticks_loc)
         ax.set_yticklabels(ylabels)

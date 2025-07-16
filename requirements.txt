@@ -1,5 +1,4 @@
-tsdat>=0.8.5
+tsdat>=0.8.9
 cmocean
 typer
-mhkit<0.9.0
-numpy<2.0.0
+mhkit
