@@ -1,0 +1,89 @@
+classname: tsdat.io.retrievers.StorageRetriever
+parameters:
+  fetch_parameters:
+    # How far in time to look after the "end" timestamp (+), before the "begin"
+    # timestamp (-), or both (none) to find filenames that contain needed data
+    time_padding: -24h
+
+  transformation_parameters:
+    # Where the point lies in the coordinate bounds (CENTER, LEFT, RIGHT)
+    alignment:
+      time: CENTER
+
+    # How far to look for the next available data point
+    range:
+      time: 120s
+
+    # Width of the transformation
+    width:
+      time: 60s
+
+coords:
+  time:
+    .*:
+      name: time
+  frequency:
+    .*: 
+      name: frequency
+  direction:
+    .*: 
+      name: direction
+
+data_vars:
+  x:
+    .*pos.*:
+      name: x
+  y:
+    .*pos.*:
+      name: y
+  z:
+    .*pos.*:
+      name: z
+  lat:
+    .*:
+      name: lat
+  lon:
+    .*:
+      name: lon
+  sst:
+    .*:
+      name: sst
+  wave_hs:
+    .*: 
+      name: wave_hs
+  wave_te:
+    .*: 
+      name: wave_te
+  wave_tp:
+    .*: 
+      name: wave_tp
+  wave_ta:
+    .*: 
+      name: wave_ta
+  wave_tz:
+    .*: 
+      name: wave_tz
+  wave_dp:
+    .*: 
+      name: wave_dp
+  wave_spread:
+    .*: 
+      name: wave_spread
+  wave_energy_density:
+    .*: 
+      name: wave_energy_density
+  wave_a1_value:
+    .*: 
+      name: wave_a1_value
+  wave_b1_value:
+    .*: 
+      name: wave_b1_value
+  wave_a2_value:
+    .*: 
+      name: wave_a2_value
+  wave_b2_value:
+    .*: 
+      name: wave_b2_value
+  wave_check_factor:
+    .*: 
+      name: wave_check_factor

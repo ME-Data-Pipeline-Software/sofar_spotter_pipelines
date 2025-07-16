@@ -12,24 +12,24 @@ readers:
               names: ["ms", "time", "x", "y", "z", ""]
               skiprows: 1
         .*LOC.*:
-          classname: pipelines.spotter_raw.readers.GPSReader
+          classname: pipelines.spotter_v2.readers.GPSReader
         .*SST.*:
-          classname: pipelines.spotter_raw.readers.SSTReader
+          classname: pipelines.spotter_v2.readers.SSTReader
         .*BARO.*:
-          classname: pipelines.spotter_raw.readers.SpotterRawReader
+          classname: pipelines.spotter_v2.readers.SpotterRawReader
         .*HTU.*:
-          classname: pipelines.spotter_raw.readers.SpotterRawReader
+          classname: pipelines.spotter_v2.readers.SpotterRawReader
         .*PWR.*:
-          classname: pipelines.spotter_raw.readers.SpotterRawReader
+          classname: pipelines.spotter_v2.readers.SpotterRawReader
         # .*SPC.*:
-        #   classname: pipelines.spotter_raw.readers.SPCReader
-      exclude: [.*SPC.*, .*SYS.*, .*GMN.*, .*HDR.*, .*\.log]
+        #   classname: pipelines.spotter_v2.readers.SPCReader
+      exclude: [.*SPC.*, .*SYS.*, .*GMN.*, .*HDR.*, .*ERR.*, .*\.log]
 
 coords:
   time:
     name: time
     data_converters:
-      - classname: pipelines.spotter_raw.converters.EpochTimeConverter
+      - classname: pipelines.spotter_v2.converters.EpochTimeConverter
 
 data_vars:
   x:

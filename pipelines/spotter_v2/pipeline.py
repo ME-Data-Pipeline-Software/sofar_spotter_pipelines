@@ -25,6 +25,11 @@ class SpotterRaw(IngestPipeline):
         dataset.attrs["datastream"] = ".".join(datastream)
         dataset.attrs["platform_id"] += spotter_id
 
+        # Fix messed up time coordinate. Not sure where timestamps get
+        # unconverted from numpy datetime back into pandas.
+        dataset = dataset.assign_coords(
+            {"time": dataset["time"].astype("datetime64[ns]")}
+        )
         return dataset
 
     def hook_finalize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:

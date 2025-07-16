@@ -1,0 +1,230 @@
+attrs:
+  title: Wave Statistics
+  location_id: pnnl
+  dataset_name: wave_stats
+  data_level: c1
+  description: " "
+ 
+  summary:
+    Wave statistics measured by a Sofar Spotter wave buoy deployed in Clallam Bay, WA
+  keywords:
+    OCEAN WAVES, GRAVITY WAVES, WIND WAVES, SIGNIFICANT WAVE HEIGHT, WAVE FREQUENCY,
+    WAVE PERIOD, WAVE SPECTRA
+  Conventions: "CD-1.6, ACDD-1.3, IOOS-1.2"
+  featureType: timeseries
+  id: Spotter
+  infoURL: https://www.osti.gov/biblio/1842840
+  license: Freely Distributed
+  naming_authority: gov.pnnl.sequim
+  standard_name_vocabulary: CF Standard Name Table v79
+  # Attribution
+  creator_country: USA
+  creator_email: ""
+  creator_institution: Pacific Northwest National Laboratory (PNNL) - Sequim
+  creator_institution_url: https://www.pnnl.gov/
+  creator_sector: other
+  creator_type: institution
+  creator_url: https://www.pnnl.gov/
+  institution: Pacific Northwest National Laboratory (PNNL)
+  publisher_country: USA
+  publisher_email: ""
+  publisher_institution: Pacific Northwest National Laboratory (PNNL) - Sequim
+  publisher_url: https://www.pnnl.gov/
+  acknowledgement: ""
+  platform: buoy
+  platform_vocabulary: http://mmisw.org/ont/ioos/platform
+  platform_name: Sofar Spotter Wave Buoy
+  geospatial_lat_min: 48.2735
+  geospatial_lat_max: 48.2742
+  geospatial_lat_units: degree_north
+  geospatial_lon_min: -124.2870
+  geospatial_lon_max: -124.2852
+  geospatial_lon_units: degree_east
+  geospatial_vertical_min: 0.0
+  geospatial_vertical_max: 0.0
+  geospatial_vertical_units: meters
+  geospatial_vertical_origin: sea surface
+  geospatial_vertical_positive: up
+  geospatial_vertical_resolution: 1.0
+  time_coverage_start: "2021-08-24T18:30:00Z"
+  time_coverage_end: "2021-09-29T18:45:00Z"
+  source: insitu observations
+
+coords:
+  time:
+    dims: [time]
+    dtype: datetime64[ms]
+    attrs:
+      units: Seconds since 1970-01-01 00:00:00 UTC
+      long_name: Time
+      standard_name: time
+      timezone: UTC
+      coverage_content_type: coordinate
+  frequency:
+    dims: [frequency]
+    dtype: float32
+    attrs:
+      long_name: Band Center Frequency
+      units: Hz
+      standard_name: wave_frequency
+      coverage_content_type: coordinate
+  direction: 
+    dims: [direction]
+    dtype: float32
+    attrs:
+      long_name: Compass direction, CW from N
+      units: degree
+      coverage_content_type: coordinate
+
+data_vars:
+  lat:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: degree_north
+      long_name: Latitude
+      standard_name: latitude
+      valid_min: -90
+      valid_max: 90
+  lon:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: degree_east
+      long_name: Longitude
+      standard_name: longitude
+      valid_min: -180
+      valid_max: 180
+  sst:
+    dims: [time]
+    dtype: float32
+    attrs:
+      units: degree_C
+      long_name: Sea Surface Temperature
+      standard_name: sea_surface_temperature
+      valid_min: 0
+      valid_max: 40
+  wave_hs:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Significant Wave Height
+      units: m
+      standard_name: sea_surface_wave_significant_height
+      valid_min: 0
+      valid_max: 20
+  wave_te:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Wave Energy Period
+      units: s
+      standard_name: sea_surface_wave_mean_period_from_variance_spectral_density_inverse_frequency_moment
+      valid_min: 0
+      valid_max: 22
+      additional_processing:
+        Calculated from the full-spectrum, buoy-returned energy density values.
+  wave_tp:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Peak Wave Period
+      units: s
+      standard_name: sea_surface_wave_period_at_variance_spectral_density_maximum
+      valid_min: 0
+      valid_max: 22
+  wave_ta:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Average Wave Period
+      units: s
+      standard_name: sea_surface_wave_mean_period_from_variance_spectral_density_first_frequency_moment
+      valid_min: 0
+      valid_max: 22
+      additional_processing:
+        Calculated from the full-spectrum, buoy-returned energy density values.
+  wave_tz:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Zero-Upcross Wave Period
+      units: s
+      standard_name: sea_surface_wave_zero_upcrossing_period
+      valid_min: 0
+      valid_max: 22
+  wave_dp:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Peak Wave Direction
+      units: degree
+      standard_name: sea_surface_wave_from_direction_at_variance_spectral_density_maximum
+      valid_min: -180
+      valid_max: 180
+  wave_spread:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Peak Wave Spread
+      standard_name: sea_surface_wave_directional_spread_at_variance_spectral_density_maximum
+      units: degree
+      valid_min: 0
+      valid_max: 180
+  wave_energy_density:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: Wave Energy Density
+      units: m^2 s
+      standard_name: sea_surface_wave_variance_spectral_density
+      valid_min: 0.0
+  wave_dir_energy_density:
+    dims: [time, frequency, direction]
+    dtype: float32
+    attrs:
+      long_name: Directional Energy Density
+      units: m^2 s / deg
+      standard_name: sea_surface_wave_directional_variance_spectral_density
+      valid_min: 0.0
+  wave_a1_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: a1 Fourier Coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_b1_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: b1 Fourier Coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_a2_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: a2 Fourier Coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_b2_value:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: b2 Fourier Coefficient
+      valid_min: -1.0
+      valid_max: 1.0
+      units: "1"
+  wave_check_factor:
+    dims: [time, frequency]
+    dtype: float32
+    attrs:
+      long_name: Check Factor
+      valid_min: 0.0
+      valid_max: 2.549999952316284
+      comment: Should be close to unity
+      units: "1"
