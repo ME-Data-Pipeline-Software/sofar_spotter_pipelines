@@ -1,8 +1,9 @@
 attrs:
   title: Wave Statistics
   location_id: pnnl
-  dataset_name: wave_stats
+  dataset_name: spotter
   data_level: c1
+  qualifier: "XXXXX"
   description: " "
  
   summary:
@@ -34,11 +35,11 @@ attrs:
   platform: buoy
   platform_vocabulary: http://mmisw.org/ont/ioos/platform
   platform_name: Sofar Spotter Wave Buoy
-  geospatial_lat_min: 48.2735
-  geospatial_lat_max: 48.2742
+  geospatial_lat_min: 48.08
+  geospatial_lat_max: 48.13
   geospatial_lat_units: degree_north
-  geospatial_lon_min: -124.2870
-  geospatial_lon_max: -124.2852
+  geospatial_lon_min: -123.02
+  geospatial_lon_max: -123.04
   geospatial_lon_units: degree_east
   geospatial_vertical_min: 0.0
   geospatial_vertical_max: 0.0
@@ -77,33 +78,94 @@ coords:
       coverage_content_type: coordinate
 
 data_vars:
-  lat:
+  x:
     dims: [time]
     dtype: float32
     attrs:
-      units: degree_north
+      long_name: Buoy Surge
+      standard_name: platform_surge
+      units: m
+      valid_min: -8
+      valid_max: 8
+  y:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Buoy Sway
+      standard_name: platform_sway
+      units: m
+      valid_min: -8
+      valid_max: 8
+  z:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Buoy Heave
+      standard_name: platform_heave
+      units: m
+      valid_min: -8
+      valid_max: 8
+
+  latitude:
+    dims: [time]
+    dtype: float32
+    attrs:
       long_name: Latitude
       standard_name: latitude
+      units: degree_north
       valid_min: -90
       valid_max: 90
-  lon:
+  longitude:
     dims: [time]
     dtype: float32
     attrs:
-      units: degree_east
       long_name: Longitude
       standard_name: longitude
+      units: degree_east
       valid_min: -180
       valid_max: 180
-  sst:
+
+  sea_surface_temperature:
     dims: [time]
     dtype: float32
     attrs:
-      units: degree_C
       long_name: Sea Surface Temperature
       standard_name: sea_surface_temperature
+      units: degree_C
+      coverage_content_type: physicalMeasurement
       valid_min: 0
       valid_max: 40
+  air_pressure:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Mean Barometric Pressure
+      standard_name: air_pressure
+      units: hPa
+      coverage_content_type: physicalMeasurement
+      valid_min: 800
+      valid_max: 1100
+  air_temperature:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Air Temperature
+      standard_name: air_temperature
+      units: degree_C
+      coverage_content_type: physicalMeasurement
+      valid_min: -20
+      valid_max: 40
+  humidity:
+    dims: [time]
+    dtype: float32
+    attrs:
+      long_name: Relative Humidity
+      standard_name: relative_humidity
+      units: "%"
+      coverage_content_type: physicalMeasurement
+      valid_min: 0
+      valid_max: 100
+
   wave_hs:
     dims: [time]
     dtype: float32

@@ -1,17 +1,15 @@
-classname: pipelines.vap_wave_stats.pipeline.VapWaveStats
+classname: pipelines.vap_wave_v2.pipeline.VapWaveStats
 parameters:
   datastreams:
-    - clallam.wave.c0
-    - clallam.spotter-gps-1min.a1
-    - clallam.spotter-sst-1min.a1
+    - pnnl.spotter-32632C.a1
 
 triggers: []
 
 retriever:
-  path: pipelines/vap_wave_stats/config/retriever.yaml
+  path: pipelines/vap_wave_v2/config/retriever.yaml
 
 dataset:
-  path: pipelines/vap_wave_stats/config/dataset.yaml
+  path: pipelines/vap_wave_v2/config/dataset.yaml
 
 quality:
   path: shared/quality.yaml

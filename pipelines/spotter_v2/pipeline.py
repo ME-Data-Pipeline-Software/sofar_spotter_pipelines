@@ -20,9 +20,9 @@ class SpotterRaw(IngestPipeline):
         # Set spotter id attributes if loaded from json file
         spotter_id = Path(dataset.attrs["inputs"]).stem[4:].upper()
         dataset.attrs["qualifier"] = spotter_id
-        datastream = dataset.attrs["datastream"].split(".")
-        datastream[1] = dataset.attrs["dataset_name"] + "-" + dataset.attrs["qualifier"]
-        dataset.attrs["datastream"] = ".".join(datastream)
+        dataset.attrs["datastream"] = dataset.attrs["datastream"].replace(
+            "XXXXX", spotter_id
+        )
         dataset.attrs["platform_id"] += spotter_id
 
         # Fix messed up time coordinate. Not sure where timestamps get

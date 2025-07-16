@@ -24,7 +24,7 @@
             "console": "integratedTerminal",
         },
         {
-            "name": "Debug Ingest",
+            "name": "Debug Ingest V2",
             "type": "python",
             "request": "launch",
             "program": "${workspaceFolder}//runner.py",
@@ -32,7 +32,7 @@
             "console": "integratedTerminal",
             "args": [
                 "ingest",
-                "storage/log.zip",
+                "pipelines/spotter_v2/test/data/input/spot32632C.zip",
             ]
         },
         {
@@ -46,9 +46,9 @@
                 "vap",
                 "pipelines/vap_wave_raw/config/pipeline.yaml",
                 "--begin",
-                "20210828.000000",
+                "20210903.000000",
                 "--end",
-                "20210829.000000"
+                "20210904.000000"
             ]
         },
         {
@@ -62,9 +62,25 @@
                 "vap",
                 "pipelines/vap_wave_stats/config/pipeline.yaml",
                 "--begin",
-                "20210901.000000",
+                "20210903.000000",
                 "--end",
-                "20211001.000000"
+                "20210904.000000"
+            ]
+        },
+        {
+            "name": "Debug VAP V2",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}//runner.py",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "args": [
+                "vap",
+                "pipelines/vap_wave_v2/config/pipeline.yaml",
+                "--begin",
+                "20250709.150000",
+                "--end",
+                "20250710.030000"
             ]
         },
     ]

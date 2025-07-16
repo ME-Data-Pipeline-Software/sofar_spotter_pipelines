@@ -5,7 +5,13 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from cmocean.cm import amp_r, dense, haline
 from mhkit.tidal import graphics
+from mhkit import wave, dolfyn
 from tsdat import TransformationPipeline
+
+
+fs = 2.5  # Hz, Spotter sampling frequency
+wat = 1800  # s, window averaging time
+freq_slc = [0.0455, 1]  # 22 to 1 s periods
 
 
 class VapWaveStats(TransformationPipeline):
@@ -17,57 +23,172 @@ class VapWaveStats(TransformationPipeline):
         # Code hook to customize any input datasets prior to datastreams being combined
         # and data converters being run.
 
-        # Need to write in direction coordinate that will be used later
+        # Need to write in frequency and direction coordinates that will be used later
+        # Create FFT frequency vector
+        nfft = fs * wat // 6
+        f = np.fft.fftfreq(int(nfft), 1 / fs)
+        # Use only positive frequencies
+        freq = np.abs(f[1 : int(nfft / 2.0 + 1)])
+        # Trim frequency vector to > 0.0455 Hz (wave periods between 1 and 22 s)
+        freq = freq[np.where((freq > freq_slc[0]) & (freq <= freq_slc[1]))]
+        directions = np.arange(0, 360, 2.0).astype("float32")
+
         for key in input_datasets:
-            if "wave" in key:
-                directions = np.arange(0, 360, 2.0).astype("float32")
-                input_datasets[key] = input_datasets[key].assign_coords(
-                    {"direction": directions}
-                )
-                return input_datasets
+            input_datasets[key] = input_datasets[key].assign_coords(
+                {"frequency": freq.astype("float32")}
+            )
+            input_datasets[key] = input_datasets[key].assign_coords(
+                {"direction": directions}
+            )
+        return input_datasets
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
         # (Optional) Use this hook to modify the dataset before qc is applied
         dataset.attrs.pop("description")
+        # Update buoy name in qualifier and datastream
+        spotter_id = dataset.attrs["inputs"].split("-")[-1].split(".")[0]
+        dataset.attrs["qualifier"] = spotter_id
+        dataset.attrs["datastream"] = dataset.attrs["datastream"].replace(
+            "XXXXX", spotter_id
+        )
+
+        # Fill small gps so we can calculate a wave spectrum
+        for key in ["x", "y", "z"]:
+            dataset[key] = dataset[key].interpolate_na(
+                dim="time", method="linear", max_gap=np.timedelta64(5, "s")
+            )
+
+        # Create 2D tensor for spectral analysis
+        disp = xr.DataArray(
+            data=np.array(
+                [
+                    dataset["x"],
+                    dataset["y"],
+                    dataset["z"],
+                ]
+            ),
+            coords={"dir": ["x", "y", "z"], "time": dataset["time"]},
+        )
+
+        ## Using dolfyn to create spectra
+        nbin = fs * wat
+        fft_tool = dolfyn.adv.api.ADVBinner(
+            n_bin=nbin, fs=fs, n_fft=nbin // 6, n_fft_coh=nbin // 6
+        )
+        # Trim frequency vector to > 0.0455 Hz (wave periods smaller than 22 s)
+        slc_freq = slice(freq_slc[0], freq_slc[1])
+
+        # Auto-spectra
+        psd = fft_tool.power_spectral_density(disp, freq_units="Hz")
+        psd = psd.sel(freq=slc_freq)
+        Sxx = psd.sel(S="Sxx")
+        Syy = psd.sel(S="Syy")
+        Szz = psd.sel(S="Szz")
+
+        # Cross-spectra
+        csd = fft_tool.cross_spectral_density(disp, freq_units="Hz")
+        csd = csd.sel(coh_freq=slc_freq)
+        Cxz = csd.sel(C="Cxz").real
+        Cxy = csd.sel(C="Cxy").real
+        Cyz = csd.sel(C="Cyz").real
+
+        ## Wave height and period
+        pd_Szz = Szz.T.to_pandas()
+        Hs = wave.resource.significant_wave_height(pd_Szz)
+        Te = wave.resource.energy_period(pd_Szz)
+        Ta = wave.resource.average_wave_period(pd_Szz)
+        Tp = wave.resource.peak_period(pd_Szz)
+        Tz = wave.resource.average_zero_crossing_period(pd_Szz)
+
+        # Check factor: generally should be around 1
+        k = np.sqrt((Sxx + Syy) / Szz)
+
+        # Calculate peak wave direction and spread
+        a1 = Cxz.values / np.sqrt((Sxx + Syy) * Szz)
+        b1 = Cyz.values / np.sqrt((Sxx + Syy) * Szz)
+        a2 = (Sxx - Syy) / (Sxx + Syy)
+        b2 = 2 * Cxy.values / (Sxx + Syy)
+        theta = np.rad2deg(np.arctan2(b1, a1))  # degrees CCW from East, "to" convention
+        phi = np.rad2deg(np.sqrt(2 * (1 - np.sqrt(a1**2 + b1**2))))
+
+        # Get peak frequency - fill nan slices with 0
+        peak_idx = psd[2].fillna(0).argmax("freq")
+        # degrees CW from North ("from" convention)
+        direction = (270 - theta[:, peak_idx]) % 360
+        # Set direction from -180 to 180
+        direction[direction > 180] -= 360
+        spread = phi[:, peak_idx]
+
+        # Create averaged dataset
+        ds = dataset.copy()
+        mean_time = fft_tool.mean(ds["time"].values)
+        # Trim time length to averaged time
+        ds = ds.isel(time=slice(None, mean_time.size))
+        # Set time coordinates
+        mean_time = xr.DataArray(
+            mean_time, coords={"time": mean_time}, attrs=dataset["time"].attrs
+        )
+        ds = ds.assign_coords({"time": mean_time})
+        # Average each variable
+        for var in [
+            "latitude",
+            "longitude",
+            "air_temperature",
+            "sea_surface_temperature",
+            "humidity",
+            "air_pressure",
+        ]:
+            ds[var].values = fft_tool.mean(dataset[var].values)
+
+        # Make sure mhkit vars are set to float32
+        ds["wave_energy_density"].values = Szz
+        ds["wave_hs"].values = Hs.to_xarray()["Hm0"].astype("float32")
+        ds["wave_te"].values = Te.to_xarray()["Te"].astype("float32")
+        ds["wave_tp"].values = Tp.to_xarray()["Tp"].astype("float32")
+        ds["wave_ta"].values = Ta.to_xarray()["Tm"].astype("float32")
+        ds["wave_tz"].values = Tz.to_xarray()["Tz"].astype("float32")
+        ds["wave_check_factor"].values = k
+        ds["wave_a1_value"].values = a1
+        ds["wave_b1_value"].values = b1
+        ds["wave_a2_value"].values = a2
+        ds["wave_b2_value"].values = b2
+        ds["wave_dp"].values = direction
+        ds["wave_spread"].values = spread
+
+        ds = ds.drop(("x", "y", "z"))
 
         # Calculate directional wave spectrum
-        a0 = dataset["wave_energy_density"] / np.pi
-        r1 = (1 / a0) * np.sqrt(
-            dataset["wave_a1_value"] ** 2 + dataset["wave_b1_value"] ** 2
-        )
-        r2 = (1 / a0) * np.sqrt(
-            dataset["wave_a2_value"] ** 2 + dataset["wave_b2_value"] ** 2
-        )
+        a0 = ds["wave_energy_density"] / np.pi
+        r1 = (1 / a0) * np.sqrt(ds["wave_a1_value"] ** 2 + ds["wave_b1_value"] ** 2)
+        r2 = (1 / a0) * np.sqrt(ds["wave_a2_value"] ** 2 + ds["wave_b2_value"] ** 2)
         # dir1 (+/- pi) and dir2 (+/- pi/2) are CCW from East, "to" convention
-        dir1 = np.arctan2(dataset["wave_b1_value"], dataset["wave_a1_value"])
-        dir2 = 0.5 * np.arctan2(dataset["wave_b2_value"], dataset["wave_a2_value"])
+        dir1 = np.arctan2(ds["wave_b1_value"], ds["wave_a1_value"])
+        dir2 = 0.5 * np.arctan2(ds["wave_b2_value"], ds["wave_a2_value"])
 
         # Spreading function
         # Subtract dataset variable to get dimensions right
         D = (1 / np.pi) * (
             0.5
-            + r1 * np.cos(-1 * (dir1 - np.deg2rad(dataset["direction"])))
-            + r2 * np.cos(-2 * (dir2 - np.deg2rad(dataset["direction"])))
+            + r1 * np.cos(-1 * (dir1 - np.deg2rad(ds["direction"])))
+            + r2 * np.cos(-2 * (dir2 - np.deg2rad(ds["direction"])))
         )
 
         # Wave energy density is units of Hz and degrees
-        dataset["wave_dir_energy_density"].values = dataset[
-            "wave_energy_density"
-        ] * np.rad2deg(D)
+        ds["wave_dir_energy_density"].values = ds["wave_energy_density"] * np.rad2deg(D)
 
         # Reset direction coordinate so that the spreading function D corresponds
         # to CW from North, "from" convention, instead of CCW from East, "to" convention.
-        dir_from_N = (270 - dataset["direction"]) % 360
+        dir_from_N = (270 - ds["direction"]) % 360
         dirN = xr.DataArray(
             dir_from_N,
             coords={"direction": dir_from_N},
-            attrs=dataset["direction"].attrs,
+            attrs=ds["direction"].attrs,
         )
-        dataset = dataset.assign_coords({"direction": dirN})
+        ds = ds.assign_coords({"direction": dirN})
         # sort direction properly so that it runs 0 - 360
-        dataset = dataset.sortby(dataset["direction"])
+        ds = ds.sortby(dataset["direction"])
 
-        return dataset
+        return ds
 
     def hook_finalize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
         # (Optional) Use this hook to modify the dataset after qc is applied
@@ -142,12 +263,21 @@ class VapWaveStats(TransformationPipeline):
 
         ax[3].plot(
             dataset["time"],
-            dataset["sst"],
+            dataset["sea_surface_temperature"],
             ".-",
             label="Sea Surface Temperature",
-            color="black",
+            color=haline(0.15),
         )
         ax[3].set(ylabel="Temperature\n[deg C]")
+
+        if "air_temperature" in dataset:
+            ax[3].plot(
+                dataset["time"],
+                dataset["air_temperature"],
+                ".-",
+                label="Air Temperature",
+                color="black",
+            )
 
         if "air_pressure" in dataset:
             ax[4].plot(
@@ -173,7 +303,7 @@ class VapWaveStats(TransformationPipeline):
         ## Plot GPS
         fig, ax = plt.subplots(figsize=(6, 6))
         fig.subplots_adjust(left=0.16, right=0.95, top=0.95, bottom=0.17)
-        ax.scatter(dataset["lon"], dataset["lat"])
+        ax.scatter(dataset["longitude"], dataset["latitude"])
         ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
         ax.ticklabel_format(axis="both", style="plain", useOffset=False)
         ax.set(

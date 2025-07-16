@@ -31,59 +31,29 @@ coords:
 
 data_vars:
   x:
-    .*pos.*:
+    .*:
       name: x
   y:
-    .*pos.*:
+    .*:
       name: y
   z:
-    .*pos.*:
+    .*:
       name: z
-  lat:
+  latitude:
     .*:
-      name: lat
-  lon:
+      name: latitude
+  longitude:
     .*:
-      name: lon
-  sst:
+      name: longitude
+  sea_surface_temperature:
     .*:
-      name: sst
-  wave_hs:
+      name: sea_surface_temperature
+  air_temperature:
     .*: 
-      name: wave_hs
-  wave_te:
+      name: air_temperature
+  humidity: 
     .*: 
-      name: wave_te
-  wave_tp:
-    .*: 
-      name: wave_tp
-  wave_ta:
-    .*: 
-      name: wave_ta
-  wave_tz:
-    .*: 
-      name: wave_tz
-  wave_dp:
-    .*: 
-      name: wave_dp
-  wave_spread:
-    .*: 
-      name: wave_spread
-  wave_energy_density:
-    .*: 
-      name: wave_energy_density
-  wave_a1_value:
-    .*: 
-      name: wave_a1_value
-  wave_b1_value:
-    .*: 
-      name: wave_b1_value
-  wave_a2_value:
-    .*: 
-      name: wave_a2_value
-  wave_b2_value:
-    .*: 
-      name: wave_b2_value
-  wave_check_factor:
-    .*: 
-      name: wave_check_factor
+      name: humidity
+  air_pressure:
+    .*:
+      name: air_pressure
