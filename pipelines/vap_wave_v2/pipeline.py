@@ -10,7 +10,7 @@ from tsdat import TransformationPipeline
 
 
 fs = 2.5  # Hz, Spotter sampling frequency
-wat = 600  # s, window averaging time
+wat = 1800  # s, window averaging time
 freq_slc = [0.0455, 1]  # 22 to 1 s periods
 
 
@@ -31,7 +31,7 @@ class VapWaveStats(TransformationPipeline):
         freq = np.abs(f[1 : int(nfft / 2.0 + 1)])
         # Trim frequency vector to > 0.0455 Hz (wave periods between 1 and 22 s)
         freq = freq[np.where((freq > freq_slc[0]) & (freq <= freq_slc[1]))]
-        directions = np.arange(0, 360, 2.0).astype("float32")
+        directions = np.arange(0, 360, 10).astype("float32")
 
         for key in input_datasets:
             input_datasets[key] = input_datasets[key].assign_coords(
@@ -160,6 +160,9 @@ class VapWaveStats(TransformationPipeline):
         )
 
         # Wave energy density is units of Hz and degrees
+        ds["wave_dir_energy_density"] = ds["wave_dir_energy_density"].expand_dims(
+            dim={"time": ds["time"]}, axis=0
+        )
         ds["wave_dir_energy_density"].values = ds["wave_energy_density"] * np.rad2deg(D)
 
         # Reset direction coordinate so that the spreading function D corresponds

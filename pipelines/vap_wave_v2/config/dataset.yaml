@@ -38,8 +38,8 @@ attrs:
   geospatial_lat_min: 48.08
   geospatial_lat_max: 48.13
   geospatial_lat_units: degree_north
-  geospatial_lon_min: -123.02
-  geospatial_lon_max: -123.04
+  geospatial_lon_min: -123.04
+  geospatial_lon_max: -123.01
   geospatial_lon_units: degree_east
   geospatial_vertical_min: 0.0
   geospatial_vertical_max: 0.0
@@ -251,7 +251,7 @@ data_vars:
       standard_name: sea_surface_wave_variance_spectral_density
       valid_min: 0.0
   wave_dir_energy_density:
-    dims: [time, frequency, direction]
+    dims: [frequency, direction]
     dtype: float32
     attrs:
       long_name: Directional Energy Density
