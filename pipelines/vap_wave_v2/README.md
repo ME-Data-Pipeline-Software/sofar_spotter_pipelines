@@ -1,7 +1,11 @@
 # VAP Waves V2 Transformation Pipeline
 
-The waves transformation pipeline was created from a cookiecutter template. This README file contains
-instructions for running and testing your pipeline.
+This pipeline is for reading files that were output by the spotter_v2 pipeline. It computes
+wave parameters on the ingested datafile and copies over the metocean variables. 
+
+One will need to adjust attributes in the dataset.yaml file to save and plot the correct 
+metadata. Depending on how long the file is, you may need to adjust the "time_padding"
+parameter in retriever.yaml.
 
 ## Prerequisites
 

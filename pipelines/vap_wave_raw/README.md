@@ -1,7 +1,7 @@
-# waves Transformation Pipeline
+# Waves Raw Transformation Pipeline
 
-The waves transformation pipeline was created from a cookiecutter template. This README file contains
-instructions for running and testing your pipeline.
+This VAP pipeline is designed to read in buoy motion data ingested by the `spotter` pipeline
+and calculate wave statistics.
 
 ## Prerequisites
 

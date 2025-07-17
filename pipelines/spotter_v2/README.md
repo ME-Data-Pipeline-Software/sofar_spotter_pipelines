@@ -1,7 +1,10 @@
 # Spotter V2 Ingestion Pipeline
 
-The waves ingestion pipeline was created from a cookiecutter template. This README file contains
-instructions for running and testing your pipeline.
+This pipeline is set up to ingest a zip folder containing all of the files directly from a
+Sofar Spotter's SD card. It reads the buoy motion, GPS position, metocean variables, and 
+battery/charge parameters. 
+It works better if one clears the SD card before starting a new 
+deployment; otherwise delete the old files before running this pipeline.
 
 ## Prerequisites
 

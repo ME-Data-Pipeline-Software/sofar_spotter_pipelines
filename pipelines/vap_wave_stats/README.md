@@ -1,7 +1,8 @@
-# waves Transformation Pipeline
+# Wave Stats Transformation Pipeline
 
-The waves transformation pipeline was created from a cookiecutter template. This README file contains
-instructions for running and testing your pipeline.
+This pipeline is designed to read in wave stats calculated by the `vap_wave_raw` pipeline
+and concatentate this data with the position and sea surface temperature data from the 
+`spotter` pipeline.
 
 ## Prerequisites
 

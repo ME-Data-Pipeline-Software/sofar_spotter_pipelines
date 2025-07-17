@@ -167,7 +167,7 @@ data_vars:
     dtype: float32
     attrs:
       long_name: Solar Panel Voltage
-      units: V"
+      units: V
   solar_panel_current:
     dims: [time_aux]
     dtype: float32
