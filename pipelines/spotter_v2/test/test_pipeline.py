@@ -22,7 +22,7 @@ def test_spotter_v2_pipeline_v3():
     pipeline = config.instantiate_pipeline()
 
     test_file = "pipelines/spotter_v2/test/data/input/spot30857c.zip"
-    expected_file = "pipelines/spotter_v2/test/data/expected/pnnl.spotter-30857C.a1.20250110.194406.nc"
+    expected_file = "pipelines/spotter_v2/test/data/expected/pnnl.spotter-30857C.a1.20250110.194418.nc"
 
     dataset = pipeline.run([test_file])
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore

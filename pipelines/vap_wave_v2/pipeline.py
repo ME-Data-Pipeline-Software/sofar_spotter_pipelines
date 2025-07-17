@@ -10,7 +10,7 @@ from tsdat import TransformationPipeline
 
 
 fs = 2.5  # Hz, Spotter sampling frequency
-wat = 1800  # s, window averaging time
+wat = 600  # s, window averaging time
 freq_slc = [0.0455, 1]  # 22 to 1 s periods
 
 
@@ -51,12 +51,6 @@ class VapWaveStats(TransformationPipeline):
         dataset.attrs["datastream"] = dataset.attrs["datastream"].replace(
             "XXXXX", spotter_id
         )
-
-        # Fill small gps so we can calculate a wave spectrum
-        for key in ["x", "y", "z"]:
-            dataset[key] = dataset[key].interpolate_na(
-                dim="time", method="linear", max_gap=np.timedelta64(5, "s")
-            )
 
         # Create 2D tensor for spectral analysis
         disp = xr.DataArray(
@@ -129,16 +123,8 @@ class VapWaveStats(TransformationPipeline):
             mean_time, coords={"time": mean_time}, attrs=dataset["time"].attrs
         )
         ds = ds.assign_coords({"time": mean_time})
-        # Average each variable
-        for var in [
-            "latitude",
-            "longitude",
-            "air_temperature",
-            "sea_surface_temperature",
-            "humidity",
-            "air_pressure",
-        ]:
-            ds[var].values = fft_tool.mean(dataset[var].values)
+        # Slice timestamps for auxillary data
+        ds = ds.sel(time_aux=slice(dataset["time"][0], dataset["time"][-1]))
 
         # Make sure mhkit vars are set to float32
         ds["wave_energy_density"].values = Szz
@@ -262,7 +248,7 @@ class VapWaveStats(TransformationPipeline):
         ax[2].set(ylabel="Direction [deg]")
 
         ax[3].plot(
-            dataset["time"],
+            dataset["time_aux"],
             dataset["sea_surface_temperature"],
             ".-",
             label="Sea Surface Temperature",
@@ -272,7 +258,7 @@ class VapWaveStats(TransformationPipeline):
 
         if "air_temperature" in dataset:
             ax[3].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["air_temperature"],
                 ".-",
                 label="Air Temperature",
@@ -281,7 +267,7 @@ class VapWaveStats(TransformationPipeline):
 
         if "air_pressure" in dataset:
             ax[4].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["air_pressure"],
                 ".-",
                 label="Air Pressure",

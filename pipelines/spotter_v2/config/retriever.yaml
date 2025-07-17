@@ -21,15 +21,36 @@ readers:
           classname: pipelines.spotter_v2.readers.SpotterRawReader
         .*PWR.*:
           classname: pipelines.spotter_v2.readers.SpotterRawReader
-        # .*SPC.*:
-        #   classname: pipelines.spotter_v2.readers.SPCReader
       exclude: [.*SPC.*, .*SYS.*, .*GMN.*, .*HDR.*, .*ERR.*, .*\.log]
 
 coords:
   time:
-    name: time
-    data_converters:
-      - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+    .*FLT.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+  time_aux:
+    .*LOC.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+    .*SST.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+    .*HTU.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+    .*BARO.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+    .*PWR.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v2.converters.EpochTimeConverter
+
 
 data_vars:
   x:

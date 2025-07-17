@@ -28,6 +28,6 @@ def test_vap_wave_v2_pipeline():
     # You will need to create this file after running the data through the pipeline
     # OR: Delete this and perform sanity checks on the input data instead of comparing
     # with an expected output file
-    expected_file = "pipelines/vap_wave_v2/test/data/expected/pnnl.spotter-32632C.c1.20250709.173748.nc"
+    expected_file = "pipelines/vap_wave_v2/test/data/expected/pnnl.spotter-32632C.c1.20250709.150459.nc"
     expected: xr.Dataset = xr.open_dataset(expected_file)  # type: ignore
     assert_close(dataset, expected, check_attrs=False, atol=1e-5)

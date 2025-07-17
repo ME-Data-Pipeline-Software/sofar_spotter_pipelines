@@ -1,4 +1,4 @@
-# waves Ingestion Pipeline
+# Spotter V2 Ingestion Pipeline
 
 The waves ingestion pipeline was created from a cookiecutter template. This README file contains
 instructions for running and testing your pipeline.

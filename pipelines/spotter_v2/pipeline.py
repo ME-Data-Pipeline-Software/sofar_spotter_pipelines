@@ -10,7 +10,7 @@ class SpotterRaw(IngestPipeline):
     """--------------------------------------------------------------------------------
     SPOTTER BUOY INGESTION PIPELINE
 
-    Ingests raw wave data pulled directly from Spotter buoys at PacWave, OR
+    Ingests raw wave data pulled directly from Spotter buoys
     --------------------------------------------------------------------------------"""
 
     def hook_customize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
@@ -25,11 +25,12 @@ class SpotterRaw(IngestPipeline):
         )
         dataset.attrs["platform_id"] += spotter_id
 
-        # Fix messed up time coordinate. Not sure where timestamps get
-        # unconverted from numpy datetime back into pandas.
-        dataset = dataset.assign_coords(
-            {"time": dataset["time"].astype("datetime64[ns]")}
-        )
+        # Fix messed up time coordinate. Occurs when datasets are merged.
+        for coord in dataset.coords:
+            if "time" in coord:
+                dataset = dataset.assign_coords(
+                    {coord: dataset[coord].astype("datetime64[ns]")}
+                )
         return dataset
 
     def hook_finalize_dataset(self, dataset: xr.Dataset) -> xr.Dataset:
@@ -73,14 +74,14 @@ class SpotterRaw(IngestPipeline):
         if ~dataset["sea_surface_temperature"].isnull().all():
             fig, ax = plt.subplots(3, 1, figsize=(11, 7), constrained_layout=True)
             ax[0].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["sea_surface_temperature"],
                 ".-",
                 label="Sea Surface Temperature",
                 color=haline(0.15),
             )
             ax[0].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["air_temperature"],
                 ".-",
                 label="Air Temperature",
@@ -89,7 +90,7 @@ class SpotterRaw(IngestPipeline):
             ax[0].set(ylabel="Temperature\n[deg C]")
 
             ax[1].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["air_pressure"],
                 ".-",
                 label="Air Pressure",
@@ -98,7 +99,7 @@ class SpotterRaw(IngestPipeline):
             ax[1].set(ylabel="Pressure [hPa]")
 
             ax[2].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["humidity"],
                 ".-",
                 label="Relative Humidity",
@@ -120,14 +121,14 @@ class SpotterRaw(IngestPipeline):
         if ~dataset["solar_panel_voltage"].isnull().all():
             fig, ax = plt.subplots(3, 1, figsize=(11, 7), constrained_layout=True)
             ax[0].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["solar_panel_voltage"],
                 ".-",
                 label="Solar Panel Voltage",
                 color=dense(0.15),
             )
             ax[0].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["battery_voltage"],
                 ".-",
                 label="Battery Voltage",
@@ -136,14 +137,14 @@ class SpotterRaw(IngestPipeline):
             ax[0].set(ylabel="Voltage [V]")
 
             ax[1].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["solar_panel_current"],
                 ".-",
                 label="Solar Panel Current",
                 color=dense(0.15),
             )
             ax[1].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["battery_current"],
                 ".-",
                 label="Battery Current",
@@ -152,14 +153,14 @@ class SpotterRaw(IngestPipeline):
             ax[1].set(ylabel="Current [A]")
 
             ax[2].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["charge_state"],
                 ".-",
                 label="Charge State",
                 color=dense(0.25),
             )
             ax[2].plot(
-                dataset["time"],
+                dataset["time_aux"],
                 dataset["charge_fault"],
                 ".-",
                 label="Charge Fault",

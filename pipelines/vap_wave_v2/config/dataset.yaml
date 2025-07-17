@@ -61,6 +61,15 @@ coords:
       standard_name: time
       timezone: UTC
       coverage_content_type: coordinate
+  time_aux:
+    dims: [time_aux]
+    dtype: datetime64[ms]
+    attrs:
+      units: Seconds since 1970-01-01 00:00:00 UTC
+      long_name: Time
+      standard_name: time
+      timezone: UTC
+      coverage_content_type: coordinate
   frequency:
     dims: [frequency]
     dtype: float32
@@ -107,7 +116,7 @@ data_vars:
       valid_max: 8
 
   latitude:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Latitude
@@ -116,7 +125,7 @@ data_vars:
       valid_min: -90
       valid_max: 90
   longitude:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Longitude
@@ -126,7 +135,7 @@ data_vars:
       valid_max: 180
 
   sea_surface_temperature:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Sea Surface Temperature
@@ -136,7 +145,7 @@ data_vars:
       valid_min: 0
       valid_max: 40
   air_pressure:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Mean Barometric Pressure
@@ -146,7 +155,7 @@ data_vars:
       valid_min: 800
       valid_max: 1100
   air_temperature:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Air Temperature
@@ -156,7 +165,7 @@ data_vars:
       valid_min: -20
       valid_max: 40
   humidity:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Relative Humidity

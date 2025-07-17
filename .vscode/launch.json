@@ -6,7 +6,7 @@
     "configurations": [
         {
             "name": "Python: Current File",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "justMyCode": false,
@@ -14,7 +14,7 @@
         },
         {
             "name": "Debug Tests",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "purpose": [
                 "debug-test"
@@ -25,7 +25,7 @@
         },
         {
             "name": "Debug Ingest V2",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}//runner.py",
             "justMyCode": false,
@@ -37,7 +37,7 @@
         },
         {
             "name": "Debug VAP",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}//runner.py",
             "justMyCode": false,
@@ -53,7 +53,7 @@
         },
         {
             "name": "Debug VAP2",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}//runner.py",
             "justMyCode": false,
@@ -69,7 +69,7 @@
         },
         {
             "name": "Debug VAP V2",
-            "type": "python",
+            "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}//runner.py",
             "justMyCode": false,
@@ -81,6 +81,22 @@
                 "20250709.150000",
                 "--end",
                 "20250710.030000"
+            ]
+        },
+        {
+            "name": "Debug VAP Again",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}//runner.py",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "args": [
+                "vap",
+                "pipelines/vap_wave_v2/config/pipeline.yaml",
+                "--begin",
+                "20250709.181000",
+                "--end",
+                "20250709.190000"
             ]
         },
     ]

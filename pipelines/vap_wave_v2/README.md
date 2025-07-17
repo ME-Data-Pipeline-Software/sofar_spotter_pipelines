@@ -1,4 +1,4 @@
-# waves Transformation Pipeline
+# VAP Waves V2 Transformation Pipeline
 
 The waves transformation pipeline was created from a cookiecutter template. This README file contains
 instructions for running and testing your pipeline.

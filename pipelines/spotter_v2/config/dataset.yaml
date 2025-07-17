@@ -51,7 +51,17 @@ attrs:
 coords:
   time:
     dims: [time]
-    dtype: datetime64[ms]
+    dtype: datetime64[ns]
+    attrs:
+      units: seconds since 1970-01-01 00:00:00 UTC
+      long_name: Time
+      standard_name: time
+      cf_role: timeseries_id
+      coverage_content_type: coordinate
+      timezone: UTC
+  time_aux:
+    dims: [time_aux]
+    dtype: datetime64[ns]
     attrs:
       units: seconds since 1970-01-01 00:00:00 UTC
       long_name: Time
@@ -90,7 +100,7 @@ data_vars:
       valid_max: 15
 
   latitude:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Latitude
@@ -99,7 +109,7 @@ data_vars:
       valid_min: -90
       valid_max: 90
   longitude:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Longitude
@@ -109,7 +119,7 @@ data_vars:
       valid_max: 180
 
   sea_surface_temperature:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Sea Surface Temperature
@@ -120,7 +130,7 @@ data_vars:
       valid_max: 40
 
   air_pressure:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Mean Barometric Pressure
@@ -131,7 +141,7 @@ data_vars:
       valid_max: 1100
 
   air_temperature:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Air Temperature
@@ -142,7 +152,7 @@ data_vars:
       valid_max: 40
 
   humidity:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Relative Humidity
@@ -153,49 +163,49 @@ data_vars:
       valid_max: 100
 
   solar_panel_voltage:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Solar Panel Voltage
       units: V"
   solar_panel_current:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Solar Panel Current
       units: A
   battery_voltage:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Battery Voltage
       units: V
   battery_current:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Battery Current
       units: A
   bus_voltage:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Bus Voltage
       units: V
   bus_current:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Bus Current
       units: A
   charge_state:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Battery Charge State
       units: "1"
   charge_fault:
-    dims: [time]
+    dims: [time_aux]
     dtype: float32
     attrs:
       long_name: Battery Charge Fault
