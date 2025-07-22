@@ -1,46 +1,26 @@
-# Spotter V2 Ingestion Pipeline
+# VAP Waves V2 Transformation Pipeline
 
-This pipeline is set up to ingest a zip folder containing all of the files directly from a
-Sofar Spotter's SD card. It reads the buoy motion, GPS position, metocean variables, and 
-battery/charge parameters. It is backwards compatible with most versions of Spotter buoys.
-It works better if one clears the SD card before starting a new 
-deployment; otherwise delete the old files before running this pipeline.
+This pipeline is for reading files that were output by the spotter_v3 pipeline. It computes
+wave parameters on the ingested datafile and copies over the metocean variables. 
+
+One will need to adjust attributes in the dataset.yaml file to save and plot the correct 
+metadata. Depending on how long the file is, you may need to adjust the "time_padding"
+parameter in retriever.yaml.
 
 ## Prerequisites
 
 * Ensure that your development environment has been set up according to
 [the instructions](../../README.md#development-environment-setup).
 
-> **Windows Users** - Make sure to run your `conda` commands from an Anaconda prompt OR from a WSL shell with miniconda
-> installed. If using WSL, see [this tutorial on WSL](https://tsdat.readthedocs.io/en/latest/tutorials/wsl.html) for
-> how to set up a WSL environment and attach VS Code to it.
-
-* Make sure to activate the tsdat-pipelines anaconda environment before running any commands:  `conda activate tsdat-pipelines`
-
 ## Running your pipeline
-This section shows you how to run the ingest pipeline created by the template.  Note that `{ingest-name}` refers
-to the pipeline name you typed into the template prompt, and `{location}` refers to the location you typed into
-the template prompt.
 
-1. Make sure to be at your $REPOSITORY_ROOT. (i.e., where you cloned the pipeline-template repository)
+1. Navigate to the repository root from the terminal (i.e., 2 levels up from this file)
+2. Run `runner.py` and specify the transformation pipeline that should run:
 
+        ```shell
+        python runner.py vap pipelines/vap_wave_raw/config/pipeline.yaml -b 20230324 -e 20230325
+        ```
 
-2. Run the runner.py with your test data input file as shown below:
-
-```bash
-cd $REPOSITORY_ROOT
-conda activate tsdat-pipelines # <-- you only need to do this the first time you start a terminal shell
-python runner.py pipelines/{ingest-name}/test/data/input/{location}_data.csv
-```
-
-## Test data
-Out of the box, your pipeline comes with some initial test data located in the  `pipelines/{ingest-name}/test/data/input/`
-folder.  This folder is meant to store data used for regression tests that will run before your
-pipeline is deployed to ensure that it is functioning properly.  In addition to the `input` test data folder, there is also
-an `expected` test data folder.  After you edit your pipeline definition and verify that the output is correct, you
-should place your new input test data into the `input` folder and your validated output file into the `expected` folder.
-If your input and expected output files have different names from the ones that came out of the box, you should update
-the `test_pipeline.py` file to point to the new files.
 
 ## Testing your pipeline
 This template is set up with a pytest unit test to ensure your pipeline is working correctly.  It is intended that the

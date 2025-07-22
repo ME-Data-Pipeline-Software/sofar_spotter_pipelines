@@ -1,0 +1,128 @@
+classname: tsdat.io.retrievers.DefaultRetriever
+readers:
+  .*\.zip:
+    classname: tsdat.io.readers.ZipReader
+    parameters:
+      readers:
+        .*FLT.*:
+          classname: tsdat.io.readers.CSVReader
+          parameters:
+            read_csv_kwargs:
+              index_col: "time"
+              names: ["ms", "time", "x", "y", "z", ""]
+              skiprows: 1
+        .*LOC.*:
+          classname: pipelines.spotter_v3.readers.GPSReader
+        .*SST.*:
+          classname: pipelines.spotter_v3.readers.SSTReader
+        .*BARO.*:
+          classname: pipelines.spotter_v3.readers.SpotterRawReader
+          parameters:
+            time_var: "time_baro"
+        .*HTU.*:
+          classname: pipelines.spotter_v3.readers.SpotterRawReader
+          parameters:
+            time_var: "time_met"
+        .*PWR.*:
+          classname: pipelines.spotter_v3.readers.SpotterRawReader
+          parameters:
+            time_var: "time_pwr"
+      exclude: [.*SPC.*, .*SYS.*, .*GMN.*, .*HDR.*, .*ERR.*, .*\.log]
+
+coords:
+  time:
+    .*FLT.*:
+      name: time
+      data_converters:
+        - classname: pipelines.spotter_v3.converters.EpochTimeConverter
+  time_gps:
+    .*LOC.*:
+      name: time_gps
+      data_converters:
+        - classname: pipelines.spotter_v3.converters.EpochTimeConverter
+  time_sst:
+    .*SST.*:
+      name: time_sst
+      data_converters:
+        - classname: pipelines.spotter_v3.converters.EpochTimeConverter
+  time_met:
+    .*HTU.*:
+      name: time_met
+      data_converters:
+        - classname: pipelines.spotter_v3.converters.EpochTimeConverter
+  time_baro:
+    .*BARO.*:
+      name: time_baro
+      data_converters:
+        - classname: pipelines.spotter_v3.converters.EpochTimeConverter
+  time_pwr:
+    .*PWR.*:
+      name: time_pwr
+      data_converters:
+        - classname: pipelines.spotter_v3.converters.EpochTimeConverter
+
+
+data_vars:
+  x:
+    .*FLT.*:
+      name: x
+      data_converters:
+        - classname: tsdat.io.converters.UnitsConverter
+          input_units: mm
+  y:
+    .*FLT.*:
+      name: y
+      data_converters:
+        - classname: tsdat.io.converters.UnitsConverter
+          input_units: mm
+  z:
+    .*FLT.*:
+      name: z
+      data_converters:
+        - classname: tsdat.io.converters.UnitsConverter
+          input_units: mm
+  latitude:
+    .*LOC.*:
+      name: lat
+  longitude:
+    .*LOC.*:
+      name: lon
+  sea_surface_temperature: 
+    .*SST.*: 
+      name: temperature (C)
+  air_pressure: 
+    .*BARO.*: 
+      name: pressure (mbar)
+      data_converters:
+      - classname: tsdat.io.converters.UnitsConverter
+        input_units: mbar
+  air_temperature:
+    .*HTU.*: 
+      name: temperature (C)
+  humidity: 
+    .*HTU.*: 
+      name: humidity (%RH)
+  solar_panel_voltage:
+    .*PWR.*: 
+      name: solar(V)
+  solar_panel_current:
+    .*PWR.*: 
+      name: solar(I)
+  battery_voltage:
+    .*PWR.*: 
+      name: batt(V)
+  battery_current:
+    .*PWR.*: 
+      name: batt(I)
+  bus_voltage:
+    .*PWR.*: 
+      name: bus(V)
+  bus_current:
+    .*PWR.*: 
+      name: bus(I)
+  charge_state:
+    .*PWR.*: 
+      name: chg_stat
+  charge_fault:
+    .*PWR.*: 
+      name: chg_fault

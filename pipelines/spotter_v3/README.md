@@ -2,7 +2,8 @@
 
 This pipeline is set up to ingest a zip folder containing all of the files directly from a
 Sofar Spotter's SD card. It reads the buoy motion, GPS position, metocean variables, and 
-battery/charge parameters. It is backwards compatible with most versions of Spotter buoys.
+battery/charge parameters from the version 3 Spotter buoy. It is not backwards compatible
+with the version 1 or 2 buoys. 
 It works better if one clears the SD card before starting a new 
 deployment; otherwise delete the old files before running this pipeline.
 

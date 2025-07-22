@@ -8,14 +8,20 @@ parameters:
 coords:
   time:
     name: time
-  time_aux:
-    name: time_aux
+  time_gps:
+    name: time_gps
+  time_sst:
+    name: time_sst
+  time_baro:
+    name: time_baro
+  time_met:
+    name: time_met
+  time_pwr:
+    name: time_pwr
   frequency:
-    .*:
-      name: frequency
+    name: frequency
   direction:
-    .*: 
-      name: direction
+    name: direction
 
 data_vars:
   x:

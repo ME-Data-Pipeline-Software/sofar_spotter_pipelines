@@ -1,0 +1,15 @@
+classname: pipelines.spotter_v3.pipeline.SpotterRaw
+
+triggers:
+  - .*\.zip
+
+retriever:
+  path: pipelines/spotter_v3/config/retriever.yaml
+
+dataset:
+  path: pipelines/spotter_v3/config/dataset.yaml
+
+quality:
+  path: shared/quality.yaml
+storage:
+  path: shared/storage.yaml
