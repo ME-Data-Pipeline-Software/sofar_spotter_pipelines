@@ -1,7 +1,7 @@
 classname: pipelines.spotter_v2.pipeline.SpotterRaw
 
 triggers:
-  - .*\.zip
+  - .*\spot1945.zip
 
 retriever:
   path: pipelines/spotter_v2/config/retriever.yaml

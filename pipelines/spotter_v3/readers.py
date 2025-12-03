@@ -22,7 +22,11 @@ class GPSReader(DataReader):
     """Reads "LOC" filetype from spotter: GPS data"""
 
     def read(self, input_key: str) -> Union[xr.Dataset, Dict[str, xr.Dataset]]:
-        df = pd.read_csv(input_key, delimiter=",", index_col=0)
+        try:
+            df = pd.read_csv(input_key, delimiter=",", index_col=0)
+        except pd.errors.EmptyDataError:
+            return xr.Dataset()
+
         df["lat"] = np.array(df["lat(deg)"] + df["lat(min*1e5)"] * 1e-5 / 60)
         df["lon"] = np.array(df["long(deg)"] + df["long(min*1e5)"] * 1e-5 / 60)
         df.index.name = "time_gps"
@@ -36,7 +40,11 @@ class SSTReader(DataReader):
     """Reads "SST" filetype from spotter: sea surface temperature data"""
 
     def read(self, input_key: str) -> Union[xr.Dataset, Dict[str, xr.Dataset]]:
-        df = pd.read_csv(input_key, delimiter=",", index_col=0)
+        try:
+            df = pd.read_csv(input_key, delimiter=",", index_col=0)
+        except pd.errors.EmptyDataError:
+            return xr.Dataset()
+
         df.index.name = "time_sst"
 
         if dump_bad_files(df.index):
@@ -53,7 +61,11 @@ class SpotterRawReader(DataReader):
     parameters: Parameters = Parameters()
 
     def read(self, input_key: str) -> Union[xr.Dataset, Dict[str, xr.Dataset]]:
-        df = pd.read_csv(input_key, delimiter=",", index_col=0, engine="python")
+        try:
+            df = pd.read_csv(input_key, delimiter=",", index_col=0, engine="python")
+        except pd.errors.EmptyDataError:
+            return xr.Dataset()
+
         df.index.name = self.parameters.time_var
 
         if dump_bad_files(df.index):

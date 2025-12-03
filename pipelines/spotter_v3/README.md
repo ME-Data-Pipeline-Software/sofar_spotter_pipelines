@@ -1,4 +1,4 @@
-# Spotter V2 Ingestion Pipeline
+# Spotter V3 Ingestion Pipeline
 
 This pipeline is set up to ingest a zip folder containing all of the files directly from a
 Sofar Spotter's SD card. It reads the buoy motion, GPS position, metocean variables, and 
