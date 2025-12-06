@@ -130,11 +130,11 @@ class VapWaveStats(TransformationPipeline):
 
         # Make sure mhkit vars are set to float32
         ds["wave_energy_density"].values = Szz
-        ds["wave_hs"].values = Hs.to_xarray()["Hm0"].astype("float32")
-        ds["wave_te"].values = Te.to_xarray()["Te"].astype("float32")
-        ds["wave_tp"].values = Tp.to_xarray()["Tp"].astype("float32")
-        ds["wave_ta"].values = Ta.to_xarray()["Tm"].astype("float32")
-        ds["wave_tz"].values = Tz.to_xarray()["Tz"].astype("float32")
+        ds["wave_hs"].values = Hs.to_xarray().astype("float32")
+        ds["wave_te"].values = Te.to_xarray().astype("float32")
+        ds["wave_tp"].values = Tp.to_xarray().astype("float32")
+        ds["wave_ta"].values = Ta.to_xarray().astype("float32")
+        ds["wave_tz"].values = Tz.to_xarray().astype("float32")
         ds["wave_check_factor"].values = k
         ds["wave_a1_value"].values = a1
         ds["wave_b1_value"].values = b1
@@ -297,10 +297,10 @@ class VapWaveStats(TransformationPipeline):
         ax.scatter(dataset["longitude"], dataset["latitude"])
         ax.set(ylabel="Latitude [deg N]", xlabel="Longitude [deg E]")
         ax.ticklabel_format(axis="both", style="plain", useOffset=False)
-        ax.set(
-            xlim=(dataset.geospatial_lon_min, dataset.geospatial_lon_max),
-            ylim=(dataset.geospatial_lat_min, dataset.geospatial_lat_max),
-        )
+        # ax.set(
+        #     xlim=(dataset.geospatial_lon_min, dataset.geospatial_lon_max),
+        #     ylim=(dataset.geospatial_lat_min, dataset.geospatial_lat_max),
+        # )
         # Set grid below
         ax.set_axisbelow(True)
         ax.grid()
