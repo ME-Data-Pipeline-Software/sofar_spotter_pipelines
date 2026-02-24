@@ -26,5 +26,7 @@ jobs:
           conda config --set solver libmamba
           conda env update --name tsdat-pipelines --file environment.yml
       - run: coverage run -m pytest
-      - run: coverage xml --omit "templates/ingest/*","pipelines/ingest_testing/*"
+      - run:
+          coverage xml --omit
+          "templates/ingest/*","pipelines/ingest_testing/*","src/netCDF4/*"
       - uses: codecov/codecov-action@v4
