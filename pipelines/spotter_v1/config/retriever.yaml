@@ -7,15 +7,15 @@ readers:
         delimiter: ","
         index_col: false
   .*LOC.*:
-    classname: pipelines.spotter.readers.GPSReader
+    classname: pipelines.spotter_v1.readers.GPSReader
   .*SST.*:
-    classname: pipelines.spotter.readers.SSTReader
+    classname: pipelines.spotter_v1.readers.SSTReader
 
 coords:
   time:
     name: GPS_Epoch_Time(s)
     data_converters:
-      - classname: pipelines.spotter.converters.EpochTimeConverter
+      - classname: pipelines.spotter_v1.converters.EpochTimeConverter
 
 data_vars:
   x:

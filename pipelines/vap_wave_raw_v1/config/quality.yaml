@@ -61,7 +61,7 @@ managers:
 
   - name: Check wave factor
     checker:
-      classname: pipelines.vap_wave_raw.qc.WaveCheckFactor
+      classname: pipelines.vap_wave_raw_v1.qc.WaveCheckFactor
     handlers:
       - classname: tsdat.qc.handlers.RemoveFailedValues
       - classname: tsdat.qc.handlers.RecordQualityResults

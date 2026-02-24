@@ -1,6 +1,6 @@
 # Wave Stats Transformation Pipeline
 
-This pipeline is designed to read in wave stats calculated by the `vap_wave_raw` pipeline
+This pipeline is designed to read in wave stats calculated by the `vap_wave_raw_v1` pipeline
 and concatentate this data with the position and sea surface temperature data from the 
 `spotter` pipeline.
 
@@ -15,7 +15,7 @@ and concatentate this data with the position and sea surface temperature data fr
 2. Run `runner.py` and specify the transformation pipeline that should run:
 
         ```shell
-        python runner.py vap pipelines/vap_wave_raw/config/pipeline.yaml -b 20230324 -e 20230325
+        python runner.py vap pipelines/vap_wave_raw_v1/config/pipeline.yaml -b 20230324 -e 20230325
         ```
 
 

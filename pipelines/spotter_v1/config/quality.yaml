@@ -25,11 +25,11 @@ managers:
     #---------------------------------------------------------------
   - name: Despiking Quality Check and Corrections
     checker:
-      classname: pipelines.spotter.qc.GoringNikora2002
+      classname: pipelines.spotter_v1.qc.GoringNikora2002
       parameters:
         n_points: 1500
     handlers:
-      - classname: pipelines.spotter.qc.CubicSplineInterp
+      - classname: pipelines.spotter_v1.qc.CubicSplineInterp
         parameters:
           npt: 12
           method: "cubic"

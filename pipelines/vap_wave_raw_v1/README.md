@@ -14,7 +14,7 @@ and calculate wave statistics.
 2. Run `runner.py` and specify the transformation pipeline that should run:
 
         ```shell
-        python runner.py vap pipelines/vap_wave_raw/config/pipeline.yaml -b 20230324 -e 20230325
+        python runner.py vap pipelines/vap_wave_raw_v1/config/pipeline.yaml -b 20230324 -e 20230325
         ```
 
 

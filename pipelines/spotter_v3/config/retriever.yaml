@@ -1,20 +1,20 @@
 classname: tsdat.io.retrievers.DefaultRetriever
+parameters:
+  merge_kwargs:
+    join: "outer"
 readers:
   .*\.zip:
     classname: tsdat.io.readers.ZipReader
     parameters:
       readers:
         .*FLT.*:
-          classname: tsdat.io.readers.CSVReader
-          parameters:
-            read_csv_kwargs:
-              index_col: "time"
-              names: ["ms", "time", "x", "y", "z", ""]
-              skiprows: 1
+          classname: pipelines.spotter_v3.readers.FLTReader
         .*LOC.*:
           classname: pipelines.spotter_v3.readers.GPSReader
         .*SST.*:
-          classname: pipelines.spotter_v3.readers.SSTReader
+          classname: pipelines.spotter_v3.readers.SpotterRawReader
+          parameters:
+            time_var: "time_sst"
         .*BARO.*:
           classname: pipelines.spotter_v3.readers.SpotterRawReader
           parameters:

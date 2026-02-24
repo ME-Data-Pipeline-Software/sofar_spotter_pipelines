@@ -1,0 +1,15 @@
+classname: pipelines.spotter_v1.pipeline.Waves
+
+triggers:
+  - .*FLT.CSV
+
+retriever:
+  path: pipelines/spotter_v1/config/retriever.yaml
+
+dataset:
+  path: pipelines/spotter_v1/config/dataset_flt.yaml
+
+quality:
+  path: pipelines/spotter_v1/config/quality.yaml
+storage:
+  path: shared/storage.yaml

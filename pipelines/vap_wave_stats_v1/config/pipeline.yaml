@@ -1,4 +1,4 @@
-classname: pipelines.vap_wave_stats.pipeline.VapWaveStats
+classname: pipelines.vap_wave_stats_v1.pipeline.VapWaveStats
 parameters:
   datastreams:
     - clallam.wave.c0
@@ -8,10 +8,10 @@ parameters:
 triggers: []
 
 retriever:
-  path: pipelines/vap_wave_stats/config/retriever.yaml
+  path: pipelines/vap_wave_stats_v1/config/retriever.yaml
 
 dataset:
-  path: pipelines/vap_wave_stats/config/dataset.yaml
+  path: pipelines/vap_wave_stats_v1/config/dataset.yaml
 
 quality:
   path: shared/quality.yaml

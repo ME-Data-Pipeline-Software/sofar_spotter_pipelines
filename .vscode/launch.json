@@ -44,7 +44,7 @@
             "console": "integratedTerminal",
             "args": [
                 "vap",
-                "pipelines/vap_wave_raw/config/pipeline.yaml",
+                "pipelines/vap_wave_raw_v1/config/pipeline.yaml",
                 "--begin",
                 "20210903.000000",
                 "--end",
@@ -60,7 +60,7 @@
             "console": "integratedTerminal",
             "args": [
                 "vap",
-                "pipelines/vap_wave_stats/config/pipeline.yaml",
+                "pipelines/vap_wave_stats_v1/config/pipeline.yaml",
                 "--begin",
                 "20210903.000000",
                 "--end",

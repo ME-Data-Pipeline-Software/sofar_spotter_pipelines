@@ -2,8 +2,8 @@
 
 This pipeline is the original Sofar spotter wave buoy pipeline built here. It reads in buoy 
 motion, position, and sea surface temperature from the respective csv files and saves
-them individually. This pipeline is meant to be used in conjunction with the `vap_wave_raw`
-and `vap_wave_stats` pipelines.
+them individually. This pipeline is meant to be used in conjunction with the `vap_wave_raw_v1`
+and `vap_wave_stats_v1` pipelines.
 
 ## Prerequisites
 

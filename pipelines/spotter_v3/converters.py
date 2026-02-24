@@ -1,4 +1,5 @@
 from typing import Any, Optional
+import warnings
 import xarray as xr
 from tsdat import DataConverter, DatasetConfig, RetrievedDataset
 from mhkit.dolfyn.time import epoch2dt64
@@ -41,7 +42,13 @@ class EpochTimeConverter(DataConverter):
         if "t" in str(data[0].values):
             return
 
-        data = epoch2dt64(data)
-        data = data.assign_coords({variable_name: data})
+        try:
+            # If this fails, xr.merge will fail
+            data = epoch2dt64(data.astype(float))
+            data = data.assign_coords({variable_name: data})
+        except Exception as e:
+            warnings.warn(
+                f"Failed to convert {variable_name} to datetime64. Check that the data is in epoch time format. Error: {e}"
+            )
 
         return data
