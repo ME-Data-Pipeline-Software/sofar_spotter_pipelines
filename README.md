@@ -74,7 +74,7 @@ follow the steps to copy the template repository into to your account.
 
     ```shell
     conda env create
-    conda activate tsdat-pipelines
+    conda activate spotter
     ```
 
 3. Verify your environment is set up correctly by running the tests for this repository:
@@ -143,29 +143,17 @@ VS Code that will make it much easier to get started quickly.)*
 - The `runner.py` script can be run from the command line to process input data files:
 
     ```shell
-    python runner.py <path(s) to file(s) to process>
+    python runner.py <ingest, vap> <path(s) to file(s) to process>
+    ```
 
-    ```shell
     > The pipeline(s) used to process the data will depend on the specific patterns declared
     by the `pipeline.yaml` files in each pipeline module in this repository.
-
-- You can run the example pipeline that comes bundled with this repository by running:
-
-    ```shell
-    python runner.py pipelines/example_pipeline/test/data/input/buoy.z06.00.20201201.000000.waves.csv
-    ```
-
-    If goes successfully it should output some text, ending with the line:
-
-    ```shell
-    Processing completed with 1 successes, 0 failures, and 0 skipped.
-    ```
 
 - The `runner.py` script can optionally take a glob pattern in addition to a filepath. E.g.,
 to process all 'csv' files in some input folder `data/to/process/` you would run:
 
     ```shell
-    python runner.py data/to/process/*.csv
+    python runner.py ingest data/to/process/*.csv
     ```
 
 - The `--help` option can be used to show additional usage information:
@@ -174,27 +162,22 @@ to process all 'csv' files in some input folder `data/to/process/` you would run
     python runner.py --help
     ```
 
-## Adding a new pipeline
+### VAP Pipelines
 
-1. Use a cookiecutter template to generate a new pipeline folder. From your top level
-repository folder run:
+- Value Added Product (VAP) Pipelines operate on the output of ingest pipelines. 
 
-    ```bash
-    make cookies
+- The command to run these pipelines has a slightly different structure, where we enter the 
+pipeline.yaml configuration file to use, as well as a start and end date:
+
+    ```shell
+    python runner.py vap <pipeline/<pipeline-name>/config/pipeline.yaml> --begin yyyymmdd.HHMMSS --end yyyymmdd.HHMMSS
     ```
 
-    Follow the prompts that appear to generate a new ingestion pipeline. After completing all the
-    prompts cookiecutter will run and your new pipeline code will appear inside the
-    `pipelines/<module_name>` folder.
+- The --help option can also be used here if you get stuck:
 
-    > The `make cookies` command is a memorable shortcut for `python templates/generate.py ingest`,
-    which itself is a wrapper around `cookiecutter templates/ingest -o pipelines`. To see more
-    information about the options available for this command run `python templates/generate.py --help`.
-
-2. See the README.md file inside that folder for more information on how to configure, run,
-test, and debug your pipeline.
-
-> This repository supports adding as many pipelines as you want - just repeat the steps above.
+    ```shell
+    python runner.py vap --help
+    ```
 
 ## Additional resources
 
