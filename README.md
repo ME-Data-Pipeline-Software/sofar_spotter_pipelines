@@ -1,11 +1,19 @@
-# Tsdat Pipeline Template
+# Sofar Spotter Wave Buoy Pipelines
 
 [![tests](https://github.com/tsdat/pipeline-template/actions/workflows/tests.yml/badge.svg)](https://github.com/tsdat/pipeline-template/actions/workflows/tests.yml)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This repository contains a collection of one or more `tsdat` pipelines (as found under the ``pipelines`` folder).  This
-enables related pipelines to be more easily maintained and run together.  New pipelines can be added easily via 
-the template mechanism described below.
+This repository contains a collection of one or more `tsdat` pipelines (as found under the ``pipelines`` folder) for 
+ingesting and analyzing data collected by three versions of Sofar Spotter buoys (Spotter, Spotter2, Spotter3).
+Pipelines relevant to each buoy are tagged with the corresponding version number. The basic workflow is to first run
+the raw data through the initial ingest pipeline (`spotter_v1`,`spotter_v2`,`spotter_v3`), followed by the respective
+VAP pipeline, which calculates wave parameters.
+
+The `v2` pipeline series is the most robust of the three and will likely successfully run data from all Spotter
+buoy versions. The latest `v3` pipeline will only work with Spotter3 zip files.
+
+Zip folders that are too large can stall out an ingest pipeline; the `split_zip_folders.py` script located in this 
+directory can break a large zip up into smaller zip folders.
 
 ## Repository Structure
 

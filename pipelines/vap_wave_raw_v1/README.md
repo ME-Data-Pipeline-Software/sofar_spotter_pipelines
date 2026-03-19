@@ -1,7 +1,8 @@
-# Waves Raw Transformation Pipeline
+# VAP_Wave_Raw Transformation Pipeline
 
-This VAP pipeline is designed to read in buoy motion data ingested by the `spotter` pipeline
-and calculate wave statistics.
+This VAP pipeline works in conjuction with the `spotter_v1` ingest pipeline to combine and plot
+the buoy's wave data. The output of this pipeline feeds into the `vap_wave_stats_v1`
+pipeline.
 
 ## Prerequisites
 

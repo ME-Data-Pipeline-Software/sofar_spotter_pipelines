@@ -1,7 +1,8 @@
-# waves Transformation Pipeline
+# VAP_GPS Transformation Pipeline
 
-The waves transformation pipeline was created from a cookiecutter template. This README file contains
-instructions for running and testing your pipeline.
+This VAP pipeline works in conjuction with the `spotter_v1` ingest pipeline to combine and plot
+the buoy's GPS location data. The output of this pipeline feeds into the `vap_wave_stats_v1`
+pipeline.
 
 ## Prerequisites
 
@@ -14,7 +15,7 @@ instructions for running and testing your pipeline.
 2. Run `runner.py` and specify the transformation pipeline that should run:
 
         ```shell
-        python runner.py vap pipelines/vap_waves/config/pipeline.yaml -b 20230324 -e 20230325
+        python runner.py vap pipelines/vap_gps_v1/config/pipeline.yaml -b 20230324 -e 20230325
         ```
 
 

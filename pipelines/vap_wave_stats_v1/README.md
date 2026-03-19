@@ -1,8 +1,7 @@
-# Wave Stats Transformation Pipeline
+# VAP_Wave_Stats_v1 Transformation Pipeline
 
-This pipeline is designed to read in wave stats calculated by the `vap_wave_raw_v1` pipeline
-and concatentate this data with the position and sea surface temperature data from the 
-`spotter` pipeline.
+This VAP pipeline works in conjuction with the `vap_wave_raw_v1` and `vap_gps_v1` VAP pipelines to 
+combine and plot the buoy's wave and position data to create the final data product.
 
 ## Prerequisites
 

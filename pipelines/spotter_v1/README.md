@@ -1,9 +1,18 @@
-# Spotter Ingestion Pipeline
+# Spotter V1 Ingestion Pipeline
 
-This pipeline is the original Sofar spotter wave buoy pipeline built here. It reads in buoy 
+Data pipeline for ingesting raw data from the original Sofar spotter wave buoy. Datasets from new
+buoys should utilize the v2 or v3 pipelines. 
+For this pipeline, the user must first 
+extract the zip folder and then run this pipeline on the extracted folder. It reads in buoy 
 motion, position, and sea surface temperature from the respective csv files and saves
 them individually. This pipeline is meant to be used in conjunction with the `vap_wave_raw_v1`
 and `vap_wave_stats_v1` pipelines.
+
+```bash
+cd $REPOSITORY_ROOT
+conda activate spotter # <-- you only need to do this the first time you start a terminal shell
+python runner.py ingest <path/to/your/extracted/folder>/*.csv
+```
 
 ## Prerequisites
 
@@ -28,8 +37,8 @@ the template prompt.
 
 ```bash
 cd $REPOSITORY_ROOT
-conda activate tsdat-pipelines # <-- you only need to do this the first time you start a terminal shell
-python runner.py pipelines/{ingest-name}/test/data/input/{location}_data.csv
+conda activate spotter # <-- you only need to do this the first time you start a terminal shell
+python runner.py ingest pipelines/{ingest-name}/test/data/input/{location}_data.csv
 ```
 
 ## Test data

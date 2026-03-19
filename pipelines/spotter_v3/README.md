@@ -1,11 +1,22 @@
 # Spotter V3 Ingestion Pipeline
 
-This pipeline is set up to ingest a zip folder containing all of the files directly from a
-Sofar Spotter's SD card. It reads the buoy motion, GPS position, metocean variables, and 
+Data pipeline for reading in zip folders from Sofar Spotter3 wave buoys. These buoys are the ones that
+also measure air temperature, humidity, and pressure in addition to sea surface temperature, buoy charge/power
+stats, and wave measurements. 
+It is set up to ingest a zip folder containing all of the files directly from a
+Spotter3's SD card. It reads the buoy motion, GPS position, metocean variables, and 
 battery/charge parameters from the version 3 Spotter buoy. It is not backwards compatible
-with the version 1 or 2 buoys. 
-It works better if one clears the SD card before starting a new 
+with the version 1 or 2 buoys. It is meant to be used in conjunction with the `vap_wave_v3` pipeline, which
+calculates the wave statistics.
+
+This pipeline functions better if one clears the SD card before starting a new 
 deployment; otherwise delete the old files before running this pipeline.
+
+```bash
+cd $REPOSITORY_ROOT
+conda activate spotter # <-- you only need to do this the first time you start a terminal shell
+python runner.py ingest <path/to/your/zip/folder>.zip
+```
 
 ## Prerequisites
 

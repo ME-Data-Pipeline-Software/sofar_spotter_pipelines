@@ -1,11 +1,12 @@
 # VAP Waves V2 Transformation Pipeline
 
-This pipeline is for reading files that were output by the spotter_v2 pipeline. It computes
-wave parameters on the ingested datafile and copies over the metocean variables. 
+Data pipeline that reads in files that output by the `spotter_v2` ingest pipeline. It computes
+wave parameters from the input data, copies over the metocean variables, and creates plots of
+the final wave products
 
 One will need to adjust attributes in the dataset.yaml file to save and plot the correct 
-metadata. Depending on how long the file is, you may need to adjust the "time_padding"
-parameter in retriever.yaml.
+metadata. If there are multiple input files coming into this pipeline, you may need to adjust the 
+"time_padding" parameter in retriever.yaml depending on difference in file timestamps.
 
 ## Prerequisites
 
@@ -18,7 +19,7 @@ parameter in retriever.yaml.
 2. Run `runner.py` and specify the transformation pipeline that should run:
 
         ```shell
-        python runner.py vap pipelines/vap_wave_raw_v1/config/pipeline.yaml -b 20230324 -e 20230325
+        python runner.py vap pipelines/vap_wave_v2/config/pipeline.yaml -b 20230324 -e 20230325
         ```
 
 
