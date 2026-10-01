@@ -35,7 +35,7 @@ def wave_analysis(dataset, wavelet_basic_stats=False, directional_spectra=False)
             ]
         ),
         coords={"dir": ["x", "y", "z"], "time": dataset["time"]},
-    )
+    ).astype(np.float32)
 
     ## Using dolfyn to create spectra
     nbin = constants["fs"] * constants["wat"]
@@ -180,6 +180,10 @@ def wave_analysis(dataset, wavelet_basic_stats=False, directional_spectra=False)
     # Cross wavelet transform: magnitude gives cross-wavelet power, angle gives relative phase
     Wyz = Wy * np.conj(Wz)
     Wxz = Wx * np.conj(Wz)
+
+    # Save memory
+    del Wx, Wy, Wz
+
     # Find wave direction matrix and convert from "CCW from E" ("from" convention) to "CW from N" ("to" convention)
     direction_cwt = (270 - np.rad2deg(np.arctan2(Wyz.real, Wxz.real))) % 360
     # Set to +/-180 degrees
