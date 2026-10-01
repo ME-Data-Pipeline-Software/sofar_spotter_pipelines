@@ -36,6 +36,18 @@
             ]
         },
         {
+            "name": "Debug Ingest V3",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}//runner.py",
+            "justMyCode": false,
+            "console": "integratedTerminal",
+            "args": [
+                "ingest",
+                "pipelines/spotter_v3/test/data/input/spot32632C.zip",
+            ]
+        },
+        {
             "name": "Debug VAP",
             "type": "debugpy",
             "request": "launch",

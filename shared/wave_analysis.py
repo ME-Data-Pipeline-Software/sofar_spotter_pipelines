@@ -108,7 +108,7 @@ def wave_analysis(dataset, wavelet_basic_stats=False, directional_spectra=False)
     dir_peak[dir_peak > 180] -= 360
 
     if directional_spectra:
-        ## Direct Fourier Transform (DFT) Method for Directional Wave Spectrum
+        ## Discrete Fourier Transform (DFT) Method for Directional Wave Spectrum
         # Calculate directional wave spectrum
         r1 = np.sqrt(a1**2 + b1**2)
         r2 = np.sqrt(a2**2 + b2**2)
@@ -132,7 +132,10 @@ def wave_analysis(dataset, wavelet_basic_stats=False, directional_spectra=False)
         spread_func *= np.pi / 180
 
     ## Wavelets
-    w0 = 6  # According to Farge (1992), a commonly used value for the Morlet wavelet.
+    # Method specifically derived from Pelaez-Zapata et al (2024). They use
+    # velocity instead of position to estimate direction, but the results
+    # appear equivalent.
+    w0 = 6  # According to Farge (1992), a commonly used value for the Morlet wavelet
     mother = pycwt.Morlet(w0)
     freq_target = psd["freq"].values
     # Remove NaN values
@@ -239,19 +242,22 @@ def wave_analysis(dataset, wavelet_basic_stats=False, directional_spectra=False)
         coords={"time": psd["time_psd"].values},
         attrs=dataset["time"].attrs,
     )
-    if time.size < 2:
-        raise AssertionError(
-            "Stastical data is less than length 2. Please decrease 'wat' parameter in `shared/wave_analysis.py`"
-        )
 
     ds = ds.assign_coords({"time": time})
     # Make sure mhkit vars are set to float32
     ds["wave_energy_density"].values = Szz
-    ds["wave_hs"].values = Hs.to_xarray().astype("float32")
-    ds["wave_te"].values = Te.to_xarray().astype("float32")
-    ds["wave_tp"].values = Tp.to_xarray().astype("float32")
-    ds["wave_ta"].values = Ta.to_xarray().astype("float32")
-    ds["wave_tz"].values = Tz.to_xarray().astype("float32")
+    if time.size > 1:
+        ds["wave_hs"].values = Hs.to_xarray().astype("float32")
+        ds["wave_te"].values = Te.to_xarray().astype("float32")
+        ds["wave_tp"].values = Tp.to_xarray().astype("float32")
+        ds["wave_ta"].values = Ta.to_xarray().astype("float32")
+        ds["wave_tz"].values = Tz.to_xarray().astype("float32")
+    else:
+        ds["wave_hs"].values = np.array([Hs]).astype("float32")
+        ds["wave_te"].values = np.array([Te]).astype("float32")
+        ds["wave_tp"].values = np.array([Tp]).astype("float32")
+        ds["wave_ta"].values = np.array([Ta]).astype("float32")
+        ds["wave_tz"].values = np.array([Tz]).astype("float32")
     ds["wave_check_factor"].values = k
     ds["wave_dp"].values = dir_peak.astype("float32")
     ds["wave_dm"].values = dir_mean.astype("float32")

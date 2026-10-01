@@ -260,7 +260,7 @@ data_vars:
     dims: [time]
     dtype: float32
     attrs:
-      long_name: Zero-Upcross Wave Period
+      long_name: Zero-Upcrossing Wave Period
       units: s
       standard_name: sea_surface_wave_zero_upcrossing_period
       valid_min: 0

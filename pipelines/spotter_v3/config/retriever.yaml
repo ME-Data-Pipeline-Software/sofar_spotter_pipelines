@@ -1,7 +1,4 @@
 classname: tsdat.io.retrievers.DefaultRetriever
-parameters:
-  merge_kwargs:
-    join: "outer"
 readers:
   .*\.zip:
     classname: tsdat.io.readers.ZipReader

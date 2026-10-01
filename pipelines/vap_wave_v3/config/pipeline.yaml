@@ -2,6 +2,7 @@ classname: pipelines.vap_wave_v3.pipeline.VapWaveStats
 parameters:
   datastreams:
     - pnnl.spotter-32632C.a1
+    # - pnnl.spotter-30857C.a1
 
 triggers: []
 
